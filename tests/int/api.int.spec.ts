@@ -203,3 +203,77 @@ describe('Pictures and native folders', () => {
     }
   }, 20000)
 })
+
+describe('Artifacts', () => {
+  it('requires a scan and photo on save, allows public reads, and restricts editing to staff', async () => {
+    const token = crypto.randomUUID()
+    const editor = await payload.create({
+      collection: 'users',
+      data: { email: `artifacts-${token}@example.test`, password: crypto.randomUUID() },
+    })
+    const thumbnail = await payload.create({
+      collection: 'media',
+      data: { alt: 'Artifact photo' },
+      filePath: 'public/images/artifact.png',
+    })
+    let artifactID: number | undefined
+    try {
+      await expect(
+        payload.create({
+          collection: 'artifacts',
+          data: { name: 'Missing scan', thumbnail: thumbnail.id },
+          user: editor,
+          overrideAccess: false,
+        }),
+      ).rejects.toThrow()
+      await expect(
+        // @ts-expect-error Verify runtime validation also rejects a missing thumbnail.
+        payload.create({
+          collection: 'artifacts',
+          data: { name: 'Missing photo' },
+          filePath: 'tests/fixtures/triangle.glb',
+          user: editor,
+          overrideAccess: false,
+        }),
+      ).rejects.toThrow()
+      const artifact = await payload.create({
+        collection: 'artifacts',
+        data: { name: `Artifact ${token}`, thumbnail: thumbnail.id },
+        filePath: 'tests/fixtures/triangle.glb',
+        user: editor,
+        overrideAccess: false,
+      })
+      artifactID = artifact.id
+      const saved = await payload.findByID({
+        collection: 'artifacts',
+        id: artifact.id,
+        overrideAccess: false,
+      })
+      expect(saved.url).toBeTruthy()
+      expect(saved.name).toBe(artifact.name)
+      await expect(
+        payload.update({
+          collection: 'artifacts',
+          id: artifact.id,
+          data: { description: 'Unauthorized' },
+          overrideAccess: false,
+        }),
+      ).rejects.toThrow()
+      await expect(
+        payload.delete({ collection: 'artifacts', id: artifact.id, overrideAccess: false }),
+      ).rejects.toThrow()
+      await expect(
+        payload.create({
+          collection: 'artifacts',
+          data: { name: 'Unauthorized', thumbnail: thumbnail.id },
+          filePath: 'tests/fixtures/triangle.glb',
+          overrideAccess: false,
+        }),
+      ).rejects.toThrow()
+    } finally {
+      if (artifactID) await payload.delete({ collection: 'artifacts', id: artifactID })
+      await payload.delete({ collection: 'media', id: thumbnail.id })
+      await payload.delete({ collection: 'users', id: editor.id })
+    }
+  }, 20000)
+})

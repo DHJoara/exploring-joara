@@ -10,7 +10,8 @@ The current first-release design frontier is settled. The final clarification pr
 - Deleting a folder removes its descendants and their pictures, including uploaded files. Independently uploaded copies in other folders remain intact.
 - Public browsing is allowed; picture and folder editing require login. Saves appear on subsequent page loads without publishing or rebuilding.
 - Timeline embeds the photo group’s Knight Lab timeline. Staff can change its iframe URL under the Timeline global.
-- Artifacts and Virtual Museum remain placeholders.
+- Artifacts supports GLB uploads, names, optional descriptions, and uploaded photo thumbnails. Artifacts require a scan and photo on save and appear publicly with an interactive model-viewer.
+- Virtual Museum remains a placeholder.
 
 ## Decision tree
 
@@ -28,8 +29,8 @@ The current first-release design frontier is settled. The final clarification pr
     - Optional alternative text, no required picture catalog fields: accepted.
     - Delete a folder and its descendants and pictures: accepted. Independent copies in other folders remain intact.
   - Artifacts use GLB, name, description, and uploaded thumbnail: settled.
-    - Require name, GLB, and thumbnail for public visibility; description optional: accepted.
-    - Incomplete artifacts remain staff-only: accepted.
+    - Require name, GLB, and thumbnail on save; description optional: latest simplification.
+    - Incomplete entries cannot be saved; no draft workflow: latest simplification.
     - Order artifacts by name; no manual ordering or public search: accepted.
 - Reference-inspired homepage, editable embedded Timeline, museum placeholder: settled.
 - Payload + Next.js + PostgreSQL: current architectural direction.
@@ -51,7 +52,7 @@ There are no remaining product questions blocking documentation of the local fir
 | Q2: picture membership | Many pictures in nested folders; final clarification in Q9 confirms independent uploads. |
 | Q3: picture viewer | Accept enlarged viewer with next/previous and close. |
 | Q4: ordering | Accept automatic ordering; no manual ordering. |
-| Q5: artifact completeness | Accept name, GLB, and thumbnail required for public visibility, optional description. |
+| Q5: artifact completeness | Accept name, GLB, and thumbnail required; optional description. |
 | Q6: search | No search for now. |
 | Q7: hosting | Keep production providers open. |
 | Q8: alternative text | Accept optional accessibility text. |

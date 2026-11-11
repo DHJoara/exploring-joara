@@ -2,11 +2,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 const sections: Record<string, { title: string; description: string }> = {
-  artifacts: {
-    title: 'Artifacts',
-    description:
-      'Artifact records and interactive 3D scans will be available here as the collection is added.',
-  },
   'virtual-museum': {
     title: 'Virtual Museum',
     description:

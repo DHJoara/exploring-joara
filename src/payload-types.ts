@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     pictures: Picture;
+    artifacts: Artifact;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -85,6 +86,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pictures: PicturesSelect<false> | PicturesSelect<true>;
+    artifacts: ArtifactsSelect<false> | ArtifactsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -223,6 +225,30 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artifacts".
+ */
+export interface Artifact {
+  id: number;
+  name: string;
+  description?: string | null;
+  /**
+   * Upload a real-life photo of the artifact.
+   */
+  thumbnail: number | Media;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -256,6 +282,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pictures';
         value: number | Picture;
+      } | null)
+    | ({
+        relationTo: 'artifacts';
+        value: number | Artifact;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -350,6 +380,26 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PicturesSelect<T extends boolean = true> {
   alt?: T;
   folder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artifacts_select".
+ */
+export interface ArtifactsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  thumbnail?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

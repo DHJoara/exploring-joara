@@ -23,9 +23,7 @@ export default async function PicturesPage({
       : await payload.findByID({
           collection: 'payload-folders',
           id: folderID,
-          depth: 0,
           disableErrors: true,
-          overrideAccess: false,
         })
   if (folderID !== null && !folder) notFound()
 
@@ -41,9 +39,7 @@ export default async function PicturesPage({
       ? await payload.findByID({
           collection: 'payload-folders',
           id: parentID,
-          depth: 0,
           disableErrors: true,
-          overrideAccess: false,
         })
       : null
   }
@@ -55,16 +51,12 @@ export default async function PicturesPage({
       where: folderFilter,
       sort: 'name',
       pagination: false,
-      depth: 0,
-      overrideAccess: false,
     }),
     payload.find({
       collection: 'pictures',
       where: folderFilter,
       sort: 'filename',
       pagination: false,
-      depth: 0,
-      overrideAccess: false,
     }),
   ])
 

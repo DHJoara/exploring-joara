@@ -10,6 +10,7 @@ import { r2Storage } from '@payloadcms/storage-r2'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Artifacts } from './collections/Artifacts'
 import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
 import { Pictures } from './collections/Pictures'
@@ -67,7 +68,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Pictures],
+  collections: [Users, Media, Pictures, Artifacts],
   folders: pictureFolders,
   globals: [Home, Timeline],
   editor: lexicalEditor(),

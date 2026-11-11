@@ -50,11 +50,11 @@ A picture belongs to one folder. Uploading the same file into another folder cre
 
 ## Artifacts
 
-- An artifact has a name, description, GLB scan, and separately uploaded thumbnail.
+- An artifact has a name, description, GLB scan, and separately uploaded real-life photo thumbnail.
 - Visitors can rotate and zoom the interactive scan.
 - Do not require artifact dates, materials, catalog numbers, discovery locations, or other museum metadata in the first release.
 - Automatic thumbnail generation and a custom screenshot-capture interface are outside the agreed first release.
-- Require a name, GLB, and thumbnail before an artifact is publicly visible. Description may be empty. Incomplete entries remain staff-only; this is a completeness rule rather than a separate publishing workflow.
+- Require a name, GLB, and photo thumbnail when saving an artifact. Description may be empty. A successful save makes it public; incomplete entries cannot be saved.
 - Sort artifacts by name; no manual ordering or public search is required.
 
 ## Staff editing and public updates
@@ -63,7 +63,7 @@ A picture belongs to one folder. Uploading the same file into another folder cre
 - The user explicitly removed the separate publish workflow from scope. Do not implement a Publish Website button, approval step, or archive-wide draft snapshot.
 - Successful saves, uploads, and deletions update the public archive without a separate publishing action. Do not introduce site-wide draft snapshots or publishing infrastructure.
 - Staff must not need command-line, GitHub, or infrastructure access for routine content updates.
-- Only complete artifact entries are public. Incomplete artifacts must also be excluded from anonymous API access; hiding a public link alone is insufficient.
+- Artifact saves require the scan and thumbnail; no incomplete-entry or draft workflow is needed.
 - Cache handling must make successful changes visible without a manual deployment; exact invalidation mechanics remain implementation details.
 - No production rebuild webhook or Cloudflare Worker is mandated by the revised architecture. Those belonged to the original Omeka/Astro proposal.
 
@@ -80,7 +80,7 @@ Production hosting providers remain intentionally undecided until the local nest
 3. The visitor sees the same picture hierarchy without requiring a separate publication action.
 4. An editor renames a folder; public organization updates while existing record links remain valid. To relocate a picture, staff remove it and reupload it in the destination folder.
 5. An editor deletes a populated folder; its complete subtree and contained pictures are removed. Separately uploaded copies in other folders remain intact.
-6. An editor uploads an artifact scan and thumbnail and enters its name and optional description. A visitor can open and manipulate the complete artifact; incomplete entries are staff-only.
+6. An editor uploads an artifact scan and thumbnail and enters its name and optional description. A visitor can open and manipulate the saved artifact; incomplete entries cannot be saved.
 7. Staff change the homepage banner, timeline address, or museum text without developer assistance.
 8. Anonymous users cannot create, change, or delete archive content.
 9. A failed upload or editing action reports failure rather than falsely reporting success.
