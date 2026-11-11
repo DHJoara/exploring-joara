@@ -15,6 +15,7 @@ import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
 import { Pictures } from './collections/Pictures'
 import { pictureFolders } from './collections/PictureFolders'
+import { artifactUploadSample } from './plugins/artifactUploadSample'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -92,12 +93,16 @@ export default buildConfig({
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
+      clientUploads: {
+        access: ({ req }) => Boolean(req.user),
+      },
       collections: {
         media: true,
         pictures: true,
         artifacts: true,
       },
     }),
+    artifactUploadSample(cloudflare.env.R2),
   ],
 })
 

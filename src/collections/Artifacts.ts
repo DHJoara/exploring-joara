@@ -2,7 +2,12 @@ import type { CollectionConfig } from 'payload'
 
 export const Artifacts: CollectionConfig = {
   slug: 'artifacts',
-  admin: { useAsTitle: 'name' },
+  admin: {
+    useAsTitle: 'name',
+    components: {
+      edit: { Upload: '@/components/ArtifactUpload#ArtifactUpload' },
+    },
+  },
   access: {
     read: () => true,
     create: ({ req }) => Boolean(req.user),
