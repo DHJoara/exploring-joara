@@ -17,31 +17,19 @@ export default async function PicturesPage({
   const folderID = folderParam === undefined ? null : Number(folderParam)
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
   const payload = await getPayload({ config })
-  const folder =
-    folderID === null
+  const findFolder = (id: number | null | undefined) =>
+    id == null
       ? null
-      : await payload.findByID({
-          collection: 'payload-folders',
-          id: folderID,
-          disableErrors: true,
-        })
+      : payload.findByID({ collection: 'payload-folders', id, disableErrors: true })
+  const folder = await findFolder(folderID)
   if (folderID !== null && !folder) notFound()
 
   const ancestors: FolderInterface[] = []
-  const visited = new Set<number>()
   let ancestor = folder
   while (ancestor) {
-    if (visited.has(ancestor.id)) break
-    visited.add(ancestor.id)
     ancestors.unshift(ancestor)
     const parentID = typeof ancestor.folder === 'object' ? ancestor.folder?.id : ancestor.folder
-    ancestor = parentID
-      ? await payload.findByID({
-          collection: 'payload-folders',
-          id: parentID,
-          disableErrors: true,
-        })
-      : null
+    ancestor = await findFolder(parentID)
   }
 
   const folderFilter = { folder: folderID === null ? { exists: false } : { equals: folderID } }
