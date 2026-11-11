@@ -80,6 +80,12 @@ export default buildConfig({
     binding: cloudflare.env.D1,
   }),
   logger: isProduction ? cloudflareLogger : undefined,
+  upload: {
+    limits: {
+      fileSize: 256 * 1024 * 1024,
+    },
+    requestSizeLimit: 260 * 1024 * 1024,
+  },
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
