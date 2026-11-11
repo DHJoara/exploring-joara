@@ -62,6 +62,9 @@ const cloudflare =
     : await getCloudflareContext({ async: true })
 
 export default buildConfig({
+  auth: {
+    passwordHashIterations: 100000,
+  },
   admin: {
     user: Users.slug,
     importMap: {
