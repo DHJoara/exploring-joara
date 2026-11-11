@@ -2,10 +2,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 const sections: Record<string, { title: string; description: string }> = {
-  pictures: {
-    title: 'Pictures',
-    description: 'Site photographs will be available here as the picture archive takes shape.',
-  },
   artifacts: {
     title: 'Artifacts',
     description:

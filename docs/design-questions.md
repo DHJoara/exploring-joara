@@ -1,6 +1,15 @@
 # Design interview and implementation status
 
-The current first-release design frontier is settled. The final clarification prioritizes standard Payload functionality and removes any requirement for a custom move feature. Only documentation has been changed; application implementation remains a separate action.
+The current first-release design frontier is settled. The final clarification prioritizes standard Payload functionality and removes any requirement for a custom move feature. Application implementation is in progress; production hosting remains deferred.
+
+## Current implementation
+
+- Home has a fixed public layout and editable banner, introduction, and card descriptions.
+- Pictures uses Payload's native folders and a separate image-upload collection. Staff create a folder, open it, and upload pictures there; alternative text is optional.
+- The public Pictures page follows the same hierarchy, with stable folder-ID links, alphabetical folders, filename ordering, and an enlarged viewer with previous, next, and close controls.
+- Deleting a folder removes its descendants and their pictures, including uploaded files. Independently uploaded copies in other folders remain intact.
+- Public browsing is allowed; picture and folder editing require login. Saves appear on subsequent page loads without publishing or rebuilding.
+- Artifacts, Timeline, and Virtual Museum remain placeholders.
 
 ## Decision tree
 
@@ -47,9 +56,9 @@ There are no remaining product questions blocking documentation of the local fir
 | Q8: alternative text | Accept optional accessibility text. |
 | Q9: folder ownership and relocation | Independent copies; no custom move feature. Remove and reupload is sufficient. Prefer standard functionality throughout. |
 
-## Repository observations
+## Repository observations from the original design interview
 
-Verified by read-only inspection during this documentation session:
+Historical observations before implementation:
 
 - The project is a Payload blank starter using Payload 3.93.0, Next.js 16.4.1, and React 19.2.9.
 - Payload selects the PostgreSQL adapter through `DATABASE_URL`. Users authentication, the admin interface, and REST/GraphQL routes are present.

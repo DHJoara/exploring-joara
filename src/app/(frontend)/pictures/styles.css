@@ -1,0 +1,120 @@
+.picture-breadcrumbs {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+}
+.picture-breadcrumbs a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.picture-breadcrumbs a[aria-current='page'] {
+  color: var(--muted);
+  text-decoration: none;
+}
+.picture-folders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 0;
+  margin: 24px 0;
+  list-style: none;
+}
+.picture-folders a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--rule);
+  padding: 16px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.picture-folders a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.picture-folders svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.picture-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.picture-thumbnail {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.picture-thumbnail img {
+  object-fit: cover;
+}
+.picture-thumbnail:focus-visible,
+.picture-viewer button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.picture-viewer {
+  width: 90vw;
+  max-width: 1200px;
+  max-height: 95svh;
+  padding: 20px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+}
+.picture-viewer::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+.picture-viewer-image {
+  position: relative;
+  height: 65svh;
+}
+.picture-viewer-image img {
+  object-fit: contain;
+}
+.picture-viewer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 0.8125rem;
+  padding: 8px 0;
+}
+.picture-viewer-bar p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.picture-viewer button {
+  background: transparent;
+  border: 1px solid var(--rule);
+  padding: 8px 12px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.picture-viewer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@media (max-width: 900px) {
+  .picture-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .picture-viewer {
+    padding: 12px;
+  }
+  .picture-viewer-image {
+    height: 55svh;
+  }
+}
