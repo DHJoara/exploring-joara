@@ -36,3 +36,11 @@ A public page displaying an externally hosted timeline within an embedded frame.
 
 **Virtual museum**:
 A public section reserved for a future museum experience, represented by an editable placeholder in the first release.
+
+**Site section**:
+One of Pictures, Artifacts, Timeline, or Virtual Museum, reached through the site's navigation.
+_Avoid_: Destination
+
+**Home card**:
+An image, description, and link introducing a site section on the homepage.
+_Avoid_: Destination card

@@ -1,59 +1,53 @@
-import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
-
 import config from '@/payload.config'
-import './styles.css'
+import { siteSections, siteName } from '@/globals/Home'
+
+// TODO: Look more into this Read the latest saved homepage content on every request.
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
-
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const payload = await getPayload({ config })
+  const homeContent = await payload.findGlobal({ slug: 'home' })
+  const homeCards = siteSections.map((section) => ({
+    ...section,
+    description: homeContent[section.key]?.description,
+  }))
+  const banner =
+    homeContent.banner && typeof homeContent.banner === 'object' ? homeContent.banner : null
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <div className="landscape">
+        <Image
+          src={banner?.url || '/images/home_page_banner.png'}
+          alt={
+            homeContent.bannerAlt ||
+            (banner?.url
+              ? banner.alt || ''
+              : 'Reconstructed earthen building and interpretive signs at the Joara site')
+          }
+          fill
+          sizes="(max-width: 560px) 100vw, (max-width: 900px) 75vw, 1000px"
+          preload
+        />
       </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
+      <h1>{siteName}</h1>
+      <p className="introduction">{homeContent.introduction}</p>
+      <div className="home-cards">
+        {homeCards.map((card) => (
+          <a className="home-card" href={card.href} key={card.href}>
+            <div className="home-card-image">
+              <Image src={card.imageSrc} alt="" fill sizes="(max-width: 900px) 50vw, 25vw" />
+            </div>
+            <h2>{card.title}</h2>
+            <p>{card.description}</p>
+            <span className="home-card-link">
+              {card.linkLabel} <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))}
       </div>
-    </div>
+    </>
   )
 }

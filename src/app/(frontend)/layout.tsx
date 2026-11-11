@@ -1,18 +1,65 @@
 import React from 'react'
+import Link from 'next/link'
+import { Libre_Caslon_Text, Montserrat } from 'next/font/google'
+import { SiteNavigation } from '@/components/SiteNavigation'
+import { siteSections, siteName, siteLocation } from '@/globals/Home'
 import './styles.css'
 
+const libreCaslon = Libre_Caslon_Text({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-caslon',
+})
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  display: 'swap',
+  variable: '--font-montserrat',
+})
+
+// Search metadata, separate from the introduction displayed on the homepage.
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description:
+    'Explore the archaeology, pictures, artifacts, and history of Joara in western North Carolina.',
+  title: 'Exploring Joara',
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const navigation: [string, string][] = [
+    ['Home', '/'],
+    ...siteSections.map((section): [string, string] => [section.title, section.href]),
+  ]
   return (
     <html lang="en">
-      <body>
-        <main>{children}</main>
+      <body className={`${libreCaslon.variable} ${montserrat.variable}`}>
+        <div className="site">
+          <div className="site-body">
+            <aside className="sidebar">
+              <Link className="wordmark" href="/">
+                {siteName}
+              </Link>
+              <SiteNavigation navigation={navigation} />
+            </aside>
+            <main>{children}</main>
+          </div>
+          <footer className="site-footer">
+            <div className="footer-about">
+              <Link className="footer-title" href="/">
+                {siteName}
+              </Link>
+              <p>An archaeological archive of Joara and the upper Catawba Valley.</p>
+            </div>
+            <div className="footer-bottom">
+              <span>{siteLocation}</span>
+              <Link href="/admin">
+                Staff login <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+          </footer>
+        </div>
       </body>
     </html>
   )

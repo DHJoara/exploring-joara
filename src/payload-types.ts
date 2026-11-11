@@ -87,8 +87,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    home: Home;
+  };
+  globalsSelect: {
+    home: HomeSelect<false> | HomeSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -314,6 +318,68 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home".
+ */
+export interface Home {
+  id: number;
+  pictures: {
+    description: string;
+  };
+  artifacts: {
+    description: string;
+  };
+  timeline: {
+    description: string;
+  };
+  museum: {
+    description: string;
+  };
+  /**
+   * Choose a landscape image. Leave empty to use the default banner.
+   */
+  banner?: (number | null) | Media;
+  /**
+   * Describe the banner for screen readers. Uses the image’s alternative text when left empty.
+   */
+  bannerAlt?: string | null;
+  introduction: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home_select".
+ */
+export interface HomeSelect<T extends boolean = true> {
+  pictures?:
+    | T
+    | {
+        description?: T;
+      };
+  artifacts?:
+    | T
+    | {
+        description?: T;
+      };
+  timeline?:
+    | T
+    | {
+        description?: T;
+      };
+  museum?:
+    | T
+    | {
+        description?: T;
+      };
+  banner?: T;
+  bannerAlt?: T;
+  introduction?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
