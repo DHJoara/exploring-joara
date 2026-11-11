@@ -9,10 +9,16 @@ export const dynamic = 'force-dynamic'
 export default async function HomePage() {
   const payload = await getPayload({ config })
   const homeContent = await payload.findGlobal({ slug: 'home' })
-  const homeCards = siteSections.map((section) => ({
-    ...section,
-    description: homeContent[section.key]?.description,
-  }))
+  const homeCards = siteSections.map((section) => {
+    const content = homeContent[section.key]
+    const image = typeof content?.image === 'object' ? content.image : null
+
+    return {
+      ...section,
+      description: content?.description,
+      imageSrc: image?.url || section.imageSrc,
+    }
+  })
   const banner =
     homeContent.banner && typeof homeContent.banner === 'object' ? homeContent.banner : null
 

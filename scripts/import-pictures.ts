@@ -44,8 +44,6 @@ async function importDirectory(directory: string, parent?: number) {
       const folder = await create('payload-folders', folderData)
       await importDirectory(path, folder.id)
     } else if (entry.isFile() && imageTypes[extname(entry.name).toLowerCase()]) {
-      if (parent === undefined) throw new Error(`Put this picture in a subfolder: ${path}`)
-
       const form = new FormData()
       form.set('_payload', JSON.stringify({ folder: parent }))
       form.set('file', await openAsBlob(path, {

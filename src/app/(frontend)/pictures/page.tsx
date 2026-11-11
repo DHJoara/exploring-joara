@@ -39,12 +39,15 @@ export default async function PicturesPage({
       sort: 'name',
       pagination: false,
     }),
-    payload.find({
-      collection: 'pictures',
-      where: folderFilter,
-      sort: 'filename',
-      pagination: false,
-    }),
+    // Root uploads are website assets; only browse pictures inside folders.
+    folderID === null
+      ? Promise.resolve({ docs: [] })
+      : payload.find({
+          collection: 'pictures',
+          where: folderFilter,
+          sort: 'filename',
+          pagination: false,
+        }),
   ])
 
   const galleryPictures = pictures.docs

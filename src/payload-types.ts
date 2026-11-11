@@ -425,15 +425,31 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Home {
   id: number;
   pictures: {
+    /**
+     * Choose a card image. Leave empty to use the default image.
+     */
+    image?: (number | null) | Picture;
     description: string;
   };
   artifacts: {
+    /**
+     * Choose a card image. Leave empty to use the default image.
+     */
+    image?: (number | null) | Picture;
     description: string;
   };
   timeline: {
+    /**
+     * Choose a card image. Leave empty to use the default image.
+     */
+    image?: (number | null) | Picture;
     description: string;
   };
   museum: {
+    /**
+     * Choose a card image. Leave empty to use the default image.
+     */
+    image?: (number | null) | Picture;
     description: string;
   };
   /**
@@ -469,21 +485,25 @@ export interface HomeSelect<T extends boolean = true> {
   pictures?:
     | T
     | {
+        image?: T;
         description?: T;
       };
   artifacts?:
     | T
     | {
+        image?: T;
         description?: T;
       };
   timeline?:
     | T
     | {
+        image?: T;
         description?: T;
       };
   museum?:
     | T
     | {
+        image?: T;
         description?: T;
       };
   banner?: T;

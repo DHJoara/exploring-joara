@@ -1,5 +1,5 @@
 import path from 'path'
-import { ValidationError, type CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 export const Pictures: CollectionConfig = {
   slug: 'pictures',
@@ -17,17 +17,4 @@ export const Pictures: CollectionConfig = {
     mimeTypes: ['image/*'],
   },
   fields: [{ name: 'alt', label: 'Alternative text', type: 'text' }],
-  hooks: {
-    beforeValidate: [
-      ({ data, originalDoc }) => {
-        const folder = data && 'folder' in data ? data.folder : originalDoc?.folder
-        if (!folder) {
-          throw new ValidationError({
-            errors: [{ path: 'folder', message: 'Choose a folder for this picture.' }],
-          })
-        }
-        return data
-      },
-    ],
-  },
 }

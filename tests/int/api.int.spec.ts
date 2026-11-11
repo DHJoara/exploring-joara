@@ -55,7 +55,7 @@ describe('API', () => {
 })
 
 describe('Pictures and native folders', () => {
-  it('requires staff editing and folder membership, and deletes complete folder trees', async () => {
+  it('requires staff editing, allows root uploads, and deletes complete folder trees', async () => {
     const token = crypto.randomUUID()
     const editor = await payload.create({
       collection: 'users',
@@ -88,15 +88,15 @@ describe('Pictures and native folders', () => {
       await expect(
         payload.create({ collection: 'pictures', data: {}, file: file(), overrideAccess: false }),
       ).rejects.toThrow()
-      await expect(
-        payload.create({
-          collection: 'pictures',
-          data: {},
-          file: file(),
-          user: editor,
-          overrideAccess: false,
-        }),
-      ).rejects.toMatchObject({ data: { errors: [{ path: 'folder' }] } })
+      const websiteImage = await payload.create({
+        collection: 'pictures',
+        data: {},
+        file: file(),
+        user: editor,
+        overrideAccess: false,
+      })
+      expect(websiteImage.folder).toBeFalsy()
+      await payload.delete({ collection: 'pictures', id: websiteImage.id })
 
       const child = await payload.create({
         collection: 'payload-folders',

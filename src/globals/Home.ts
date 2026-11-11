@@ -56,6 +56,14 @@ export const Home: GlobalConfig = {
       type: 'group' as const,
       fields: [
         {
+          name: 'image',
+          type: 'upload' as const,
+          relationTo: 'pictures' as const,
+          admin: {
+            description: 'Choose a card image. Leave empty to use the default image.',
+          },
+        },
+        {
           name: 'description',
           type: 'textarea' as const,
           required: true,
