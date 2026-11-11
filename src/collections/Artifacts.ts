@@ -10,6 +10,8 @@ export const Artifacts: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   upload: {
+    crop: false,
+    focalPoint: false,
     mimeTypes: ['model/gltf-binary'],
   },
   fields: [

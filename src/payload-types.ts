@@ -184,6 +184,7 @@ export interface Media {
 export interface Picture {
   id: number;
   alt?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -235,6 +236,7 @@ export interface Artifact {
    * Upload a real-life photo of the artifact.
    */
   thumbnail: number | Media;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -379,6 +381,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface PicturesSelect<T extends boolean = true> {
   alt?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -400,6 +403,7 @@ export interface ArtifactsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   thumbnail?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

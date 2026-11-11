@@ -11,6 +11,8 @@ export const Pictures: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   upload: {
+    crop: false,
+    focalPoint: false,
     staticDir: path.resolve('pictures'),
     mimeTypes: ['image/*'],
   },
