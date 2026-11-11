@@ -60,6 +60,9 @@ export function PictureGallery({ pictures }: { pictures: GalleryPicture[] }) {
           <>
             <div className="picture-viewer-bar">
               <p>{picture.filename}</p>
+              <a href={picture.url} target="_blank" rel="noreferrer">
+                View original
+              </a>
               <button type="button" onClick={() => dialog.current?.close()} autoFocus>
                 Close
               </button>

@@ -3,8 +3,6 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    // Serve originals until a Workers-compatible image optimizer is configured.
-    unoptimized: true,
     localPatterns: [
       { pathname: '/images/**' },
       { pathname: '/api/pictures/file/**' },
