@@ -18,15 +18,14 @@ export default async function PicturesPage({
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
   const payload = await getPayload({ config })
   const findFolder = (id: number | null | undefined) =>
-    id == null
-      ? null
-      : payload.findByID({ collection: 'payload-folders', id, disableErrors: true })
+    id == null ? null : payload.findByID({ collection: 'payload-folders', id, disableErrors: true })
   const folder = await findFolder(folderID)
   if (folderID !== null && !folder) notFound()
 
   const ancestors: FolderInterface[] = []
   let ancestor = folder
   while (ancestor) {
+    if (ancestor.showInGallery === false) notFound()
     ancestors.unshift(ancestor)
     const parentID = typeof ancestor.folder === 'object' ? ancestor.folder?.id : ancestor.folder
     ancestor = await findFolder(parentID)
@@ -36,7 +35,7 @@ export default async function PicturesPage({
   const [folders, pictures] = await Promise.all([
     payload.find({
       collection: 'payload-folders',
-      where: folderFilter,
+      where: { and: [folderFilter, { showInGallery: { not_equals: false } }] },
       sort: 'name',
       pagination: false,
     }),

@@ -184,16 +184,18 @@ describe('Pictures and native folders', () => {
           }),
         ).toBeNull()
       }
+      const proxy = await (
+        await import('wrangler')
+      ).getPlatformProxy<CloudflareEnv>({ remoteBindings: false })
       for (const picture of originals) {
         expect(
           await payload.findByID({ collection: 'pictures', id: picture.id, disableErrors: true }),
         ).toBeNull()
-        const { access } = await import('node:fs/promises')
-        await expect(access(`pictures/${picture.filename}`)).rejects.toThrow()
+        expect(await proxy.env.R2.head(picture._objectKey || picture.filename!)).toBeNull()
       }
       expect((await payload.findByID({ collection: 'pictures', id: copy.id })).id).toBe(copy.id)
-      const { access } = await import('node:fs/promises')
-      await expect(access(`pictures/${copy.filename}`)).resolves.toBeUndefined()
+      expect(await proxy.env.R2.head(copy._objectKey || copy.filename!)).not.toBeNull()
+      await proxy.dispose()
     } finally {
       await payload.delete({
         collection: 'payload-folders',
@@ -211,9 +213,13 @@ describe('Artifacts', () => {
       collection: 'users',
       data: { email: `artifacts-${token}@example.test`, password: crypto.randomUUID() },
     })
+    const photoFolder = await payload.create({
+      collection: 'payload-folders',
+      data: { name: 'Test thumbnails', folderType: ['pictures'], showInGallery: false },
+    })
     const thumbnail = await payload.create({
-      collection: 'media',
-      data: { alt: 'Artifact photo' },
+      collection: 'pictures',
+      data: { alt: 'Artifact photo', folder: photoFolder.id },
       filePath: 'public/images/artifact.png',
     })
     let artifactID: number | undefined
@@ -272,7 +278,7 @@ describe('Artifacts', () => {
       ).rejects.toThrow()
     } finally {
       if (artifactID) await payload.delete({ collection: 'artifacts', id: artifactID })
-      await payload.delete({ collection: 'media', id: thumbnail.id })
+      await payload.delete({ collection: 'payload-folders', id: photoFolder.id })
       await payload.delete({ collection: 'users', id: editor.id })
     }
   }, 20000)

@@ -68,7 +68,6 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
-    media: Media;
     pictures: Picture;
     artifacts: Artifact;
     'payload-kv': PayloadKv;
@@ -84,7 +83,6 @@ export interface Config {
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     pictures: PicturesSelect<false> | PicturesSelect<true>;
     artifacts: ArtifactsSelect<false> | ArtifactsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -161,24 +159,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pictures".
  */
 export interface Picture {
@@ -219,6 +199,7 @@ export interface FolderInterface {
     totalDocs?: number;
   };
   folderType?: 'pictures'[] | null;
+  showInGallery?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -230,10 +211,7 @@ export interface Artifact {
   id: number;
   name: string;
   description?: string | null;
-  /**
-   * Upload a real-life photo of the artifact.
-   */
-  thumbnail: number | Media;
+  thumbnail: number | Picture;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -272,10 +250,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
       } | null)
     | ({
         relationTo: 'pictures';
@@ -356,23 +330,6 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pictures_select".
  */
 export interface PicturesSelect<T extends boolean = true> {
@@ -425,6 +382,7 @@ export interface PayloadFoldersSelect<T extends boolean = true> {
   folder?: T;
   documentsAndFolders?: T;
   folderType?: T;
+  showInGallery?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -481,7 +439,7 @@ export interface Home {
   /**
    * Choose a landscape image. Leave empty to use the default banner.
    */
-  banner?: (number | null) | Media;
+  banner?: (number | null) | Picture;
   /**
    * Describe the banner for screen readers. Uses the image’s alternative text when left empty.
    */

@@ -5,22 +5,26 @@ import config from '../../src/payload.config'
 
 const artifactName = `Artifact test ${crypto.randomUUID()}`
 let artifactID: number
-let thumbnailID: number
+let photoFolderID: number
 
 test.beforeAll(async () => {
   const payload = await getPayload({ config })
+  const photoFolder = await payload.create({
+    collection: 'payload-folders',
+    data: { name: 'Test thumbnails', folderType: ['pictures'], showInGallery: false },
+  })
   const thumbnail = await payload.create({
-    collection: 'media',
-    data: { alt: 'Artifact photo' },
+    collection: 'pictures',
+    data: { alt: 'Artifact photo', folder: photoFolder.id },
     filePath: 'public/images/artifact.png',
   })
-  thumbnailID = thumbnail.id
+  photoFolderID = photoFolder.id
   const artifact = await payload.create({
     collection: 'artifacts',
     data: {
       name: artifactName,
       description: 'A test artifact with a photograph and interactive scan.',
-      thumbnail: thumbnailID,
+      thumbnail: thumbnail.id,
     },
     filePath: 'tests/fixtures/triangle.glb',
   })
@@ -33,7 +37,7 @@ test.afterAll(async () => {
     collection: 'artifacts',
     where: { id: { equals: artifactID } },
   })
-  if (thumbnailID) await payload.delete({ collection: 'media', id: thumbnailID })
+  if (photoFolderID) await payload.delete({ collection: 'payload-folders', id: photoFolderID })
 })
 
 test('loads a GLB and supports rotation and zoom on desktop and mobile', async ({ page }) => {

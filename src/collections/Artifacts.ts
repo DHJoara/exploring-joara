@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { generateThumbnail } from '../endpoints/generateThumbnail'
 
 export const Artifacts: CollectionConfig = {
   slug: 'artifacts',
+  endpoints: [{ path: '/thumbnail', method: 'post', handler: generateThumbnail }],
   admin: {
     useAsTitle: 'name',
     components: {
@@ -26,10 +28,9 @@ export const Artifacts: CollectionConfig = {
       name: 'thumbnail',
       required: true,
       type: 'upload',
-      relationTo: 'media',
-      filterOptions: { mimeType: { like: 'image/' } },
+      relationTo: 'pictures',
       admin: {
-        description: 'Upload a real-life photo of the artifact.',
+        hidden: true,
       },
     },
   ],

@@ -66,8 +66,7 @@ export const Home: GlobalConfig = {
     {
       name: 'banner',
       type: 'upload',
-      relationTo: 'media',
-      filterOptions: { mimeType: { like: 'image/' } },
+      relationTo: 'pictures',
 
       admin: {
         description: 'Choose a landscape image. Leave empty to use the default banner.',

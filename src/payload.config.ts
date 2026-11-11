@@ -9,7 +9,6 @@ import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
 
 import { Users } from './collections/Users'
-import { Media } from './collections/Media'
 import { Artifacts } from './collections/Artifacts'
 import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
@@ -72,7 +71,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Pictures, Artifacts],
+  collections: [Users, Pictures, Artifacts],
   folders: pictureFolders,
   globals: [Home, Timeline],
   editor: lexicalEditor(),
@@ -97,7 +96,6 @@ export default buildConfig({
         access: ({ req }) => Boolean(req.user),
       },
       collections: {
-        media: true,
         pictures: true,
         artifacts: true,
       },

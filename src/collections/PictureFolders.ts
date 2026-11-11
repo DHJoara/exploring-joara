@@ -5,6 +5,15 @@ export const pictureFolders: Exclude<Config['folders'], false | undefined> = {
   collectionOverrides: [
     ({ collection }) => ({
       ...collection,
+      fields: [
+        ...collection.fields,
+        {
+          name: 'showInGallery',
+          label: 'Show on Pictures page',
+          type: 'checkbox',
+          defaultValue: true,
+        },
+      ],
       access: { ...collection.access, read: () => true },
       hooks: {
         ...collection.hooks,

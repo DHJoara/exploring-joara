@@ -26,7 +26,7 @@ export default async function ArtifactsPage() {
                 <div className="artifact-thumbnail">
                   <Image
                     src={thumbnail.url}
-                    alt={thumbnail.alt}
+                    alt={artifact.name}
                     fill
                     sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw"
                   />
