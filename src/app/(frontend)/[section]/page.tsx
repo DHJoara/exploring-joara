@@ -7,10 +7,6 @@ const sections: Record<string, { title: string; description: string }> = {
     description:
       'Artifact records and interactive 3D scans will be available here as the collection is added.',
   },
-  timeline: {
-    title: 'Timeline',
-    description: 'A timeline of Joara and the surrounding region is coming soon.',
-  },
   'virtual-museum': {
     title: 'Virtual Museum',
     description:

@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { getPayload, Payload } from 'payload'
 import config from '@/payload.config'
+import { defaultTimelineURL } from '@/globals/Timeline'
 
 import { describe, it, beforeAll, expect } from 'vitest'
 
@@ -24,6 +25,24 @@ describe('API', () => {
         data: { introduction: 'Unauthorized change' },
         overrideAccess: false,
       }),
+    ).rejects.toThrow()
+  })
+
+  it('provides the public timeline and rejects anonymous edits', async () => {
+    const timeline = await payload.findGlobal({ slug: 'timeline', overrideAccess: false })
+    expect(timeline.embedURL).toBe(defaultTimelineURL)
+    await expect(
+      payload.updateGlobal({
+        slug: 'timeline',
+        data: { embedURL: defaultTimelineURL },
+        overrideAccess: false,
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('rejects unsafe timeline URLs', async () => {
+    await expect(
+      payload.updateGlobal({ slug: 'timeline', data: { embedURL: 'javascript:alert(1)' } }),
     ).rejects.toThrow()
   })
 

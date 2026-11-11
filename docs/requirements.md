@@ -21,7 +21,7 @@ Recursive folder deletion remains a requested behavior. Verify the installed Pay
 | Home | Landscape banner, short introduction, four destination cards, persistent sidebar | Banner and introduction |
 | Pictures | Dedicated picture archive following the staff-managed nested folder hierarchy | Folders, subfolders, and uploaded pictures |
 | Artifacts | Separate, flat artifact collection and individual interactive artifact views | Name, description, GLB scan, uploaded thumbnail |
-| Timeline | Embedded external timeline | Embed address and introductory text |
+| Timeline | Embedded external timeline | Embed address |
 | Virtual museum | Coming-soon placeholder | Placeholder text |
 
 Pictures and Artifacts are entirely separate public pages. Artifact records do not use the picture folder architecture. No Exhibits, Maps, or arbitrary page creation is required for the first release.

@@ -9,7 +9,8 @@ The current first-release design frontier is settled. The final clarification pr
 - The public Pictures page follows the same hierarchy, with stable folder-ID links, alphabetical folders, filename ordering, and an enlarged viewer with previous, next, and close controls.
 - Deleting a folder removes its descendants and their pictures, including uploaded files. Independently uploaded copies in other folders remain intact.
 - Public browsing is allowed; picture and folder editing require login. Saves appear on subsequent page loads without publishing or rebuilding.
-- Artifacts, Timeline, and Virtual Museum remain placeholders.
+- Timeline embeds the photo group’s Knight Lab timeline. Staff can change its iframe URL under the Timeline global.
+- Artifacts and Virtual Museum remain placeholders.
 
 ## Decision tree
 

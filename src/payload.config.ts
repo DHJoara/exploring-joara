@@ -11,6 +11,7 @@ import { r2Storage } from '@payloadcms/storage-r2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Home } from './globals/Home'
+import { Timeline } from './globals/Timeline'
 import { Pictures } from './collections/Pictures'
 import { pictureFolders } from './collections/PictureFolders'
 
@@ -68,7 +69,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Pictures],
   folders: pictureFolders,
-  globals: [Home],
+  globals: [Home, Timeline],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

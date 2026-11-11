@@ -97,9 +97,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     home: Home;
+    timeline: Timeline;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
+    timeline: TimelineSelect<false> | TimelineSelect<true>;
   };
   locale: null;
   widgets: {
@@ -444,6 +446,19 @@ export interface Home {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "timeline".
+ */
+export interface Timeline {
+  id: number;
+  /**
+   * Paste the iframe’s src URL, not the full iframe code.
+   */
+  embedURL: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -470,6 +485,16 @@ export interface HomeSelect<T extends boolean = true> {
   banner?: T;
   bannerAlt?: T;
   introduction?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "timeline_select".
+ */
+export interface TimelineSelect<T extends boolean = true> {
+  embedURL?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
