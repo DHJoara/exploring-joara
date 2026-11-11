@@ -62,6 +62,7 @@ const cloudflare =
     : await getCloudflareContext({ async: true })
 
 export default buildConfig({
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   auth: {
     passwordHashIterations: 100000,
   },

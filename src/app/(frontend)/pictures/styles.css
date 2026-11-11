@@ -41,6 +41,30 @@
   height: 24px;
   flex-shrink: 0;
 }
+.picture-folders-root {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.picture-folders-root a {
+  min-height: 100px;
+  box-sizing: border-box;
+  padding: 24px;
+  gap: 20px;
+  font-size: 1.125rem;
+}
+.picture-folders-root a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.picture-folders-root svg {
+  width: 36px;
+  height: 36px;
+}
+.picture-folder-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+}
 .picture-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

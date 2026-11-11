@@ -76,14 +76,17 @@ export default async function PicturesPage({
       </nav>
       <h1>{folder?.name ?? 'Pictures'}</h1>
       {folders.docs.length > 0 && (
-        <ul className="picture-folders">
+        <ul className={`picture-folders${folderID === null ? ' picture-folders-root' : ''}`}>
           {folders.docs.map((item) => (
             <li key={item.id}>
               <Link href={`/pictures?folder=${item.id}`}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                   <path d="M3 7V5h6l2 2h10v12H3z" />
                 </svg>
-                {item.name}
+                <span>{item.name}</span>
+                {folderID === null && (
+                  <span className="picture-folder-arrow" aria-hidden="true">→</span>
+                )}
               </Link>
             </li>
           ))}
