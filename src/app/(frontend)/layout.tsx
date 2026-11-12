@@ -51,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {siteName}
               </Link>
               <p>An archaeological archive of Joara and the upper Catawba Valley.</p>
+              <p>Made by NCSSM Digital Humanities Class of 2027.</p>
             </div>
             <div className="footer-bottom">
               <span>{siteLocation}</span>

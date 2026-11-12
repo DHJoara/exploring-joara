@@ -39,7 +39,6 @@ export function VirtualArtifactUpload() {
       viewer = document.createElement('model-viewer')
       viewer.style.cssText = 'position:fixed;left:-2000px;width:512px;height:512px;background:#eee;'
       viewer.setAttribute('loading', 'eager')
-      viewer.setAttribute('camera-orbit', '30deg 70deg auto')
 
       await new Promise<void>((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error('Model loading timed out.')), 60000)
