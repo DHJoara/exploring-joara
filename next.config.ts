@@ -2,8 +2,6 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: false,
   images: {
     remotePatterns: process.env.NEXT_PUBLIC_SERVER_URL
       ? [

@@ -41,19 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link className="wordmark" href="/">
                 {siteName}
               </Link>
-              <Suspense
-                fallback={
-                  <nav aria-label="Main navigation">
-                    {navigation.map(([label, href]) => (
-                      <Link href={href} key={href}>
-                        {label}
-                      </Link>
-                    ))}
-                  </nav>
-                }
-              >
-                <SiteNavigation navigation={navigation} />
-              </Suspense>
+              <SiteNavigation navigation={navigation} />
             </aside>
             <main>
               <Suspense fallback={<p>Loading…</p>}>{children}</Suspense>

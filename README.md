@@ -124,7 +124,7 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
 
 ### Public content caching
 
-Public Payload reads use Next.js `use cache` and share one cache tag: `public-content`. Payload
+Public Payload reads use Next.js `unstable_cache` and share one cache tag: `public-content`. Payload
 saves and deletions mark it stale; the next visit refreshes content in the
 background. A 24-hour revalidation interval provides a fallback if tag invalidation
 is missed; the next visit after that interval triggers a background refresh.
@@ -135,3 +135,11 @@ database using the `NEXT_TAG_CACHE_D1` binding. Its deploy/preview command creat
 the tag table. A Durable Object queue coordinates page regeneration using OpenNext defaults.
 The queue does not set a cache lifetime; refreshes use both tags and the 24-hour fallback.
 Admin, authentication, and uploads do not use the public read cache.
+
+Optimized thumbnails (`/_next/image`) use Workers Cache for one hour via
+`worker.ts`. HTML and page-navigation responses are excluded from this outer cache using
+`Cloudflare-CDN-Cache-Control`, preserving their existing `Cache-Control` headers.
+Static asset policies are left unchanged. After
+deployment, repeated image requests should show `CF-Cache-Status: HIT`; a replaced
+image at the same URL may remain fresh in cache for one hour, then an older copy
+can be served for up to another day while revalidation runs.
