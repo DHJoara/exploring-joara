@@ -12,6 +12,7 @@ import { Users } from './collections/Users'
 import { Artifacts } from './collections/Artifacts'
 import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
+import { SiteImages } from './collections/SiteImages'
 import { Pictures } from './collections/Pictures'
 import { pictureFolders } from './collections/PictureFolders'
 import { artifactUploadSample } from './plugins/artifactUploadSample'
@@ -72,7 +73,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Pictures, Artifacts],
+  collections: [Users, Pictures, Artifacts, SiteImages],
   folders: pictureFolders,
   globals: [Home, Timeline],
   editor: lexicalEditor(),
@@ -98,6 +99,7 @@ export default buildConfig({
       },
       collections: {
         pictures: true,
+        site_images: true,
         artifacts: true,
       },
     }),

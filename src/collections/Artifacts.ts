@@ -5,6 +5,7 @@ export const Artifacts: CollectionConfig = {
   slug: 'artifacts',
   endpoints: [{ path: '/thumbnail', method: 'post', handler: generateThumbnail }],
   admin: {
+    group: 'Archive',
     useAsTitle: 'name',
     components: {
       edit: { Upload: '@/components/ArtifactUpload#ArtifactUpload' },
@@ -28,7 +29,7 @@ export const Artifacts: CollectionConfig = {
       name: 'thumbnail',
       required: true,
       type: 'upload',
-      relationTo: 'pictures',
+      relationTo: 'site_images',
       admin: {
         hidden: true,
       },

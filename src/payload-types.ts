@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     pictures: Picture;
     artifacts: Artifact;
+    site_images: SiteImage;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -85,6 +86,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     pictures: PicturesSelect<false> | PicturesSelect<true>;
     artifacts: ArtifactsSelect<false> | ArtifactsSelect<true>;
+    site_images: SiteImagesSelect<false> | SiteImagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -211,7 +213,27 @@ export interface Artifact {
   id: number;
   name: string;
   description?: string | null;
-  thumbnail: number | Picture;
+  thumbnail: number | SiteImage;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+}
+/**
+ * Images used for site specific.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site_images".
+ */
+export interface SiteImage {
+  id: number;
+  alt?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -258,6 +280,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'artifacts';
         value: number | Artifact;
+      } | null)
+    | ({
+        relationTo: 'site_images';
+        value: number | SiteImage;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -367,6 +393,23 @@ export interface ArtifactsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site_images_select".
+ */
+export interface SiteImagesSelect<T extends boolean = true> {
+  alt?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -428,34 +471,34 @@ export interface Home {
     /**
      * Choose a card image. Leave empty to use the default image.
      */
-    image?: (number | null) | Picture;
+    image?: (number | null) | SiteImage;
     description: string;
   };
   artifacts: {
     /**
      * Choose a card image. Leave empty to use the default image.
      */
-    image?: (number | null) | Picture;
+    image?: (number | null) | SiteImage;
     description: string;
   };
   timeline: {
     /**
      * Choose a card image. Leave empty to use the default image.
      */
-    image?: (number | null) | Picture;
+    image?: (number | null) | SiteImage;
     description: string;
   };
   museum: {
     /**
      * Choose a card image. Leave empty to use the default image.
      */
-    image?: (number | null) | Picture;
+    image?: (number | null) | SiteImage;
     description: string;
   };
   /**
    * Choose a landscape image. Leave empty to use the default banner.
    */
-  banner?: (number | null) | Picture;
+  banner?: (number | null) | SiteImage;
   /**
    * Describe the banner for screen readers. Uses the image’s alternative text when left empty.
    */

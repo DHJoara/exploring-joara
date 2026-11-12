@@ -5,6 +5,7 @@ export const defaultTimelineURL =
 
 export const Timeline: GlobalConfig = {
   slug: 'timeline',
+  admin: { group: 'Website' },
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user),

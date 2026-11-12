@@ -3,6 +3,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Pictures: CollectionConfig = {
   slug: 'pictures',
+  admin: {
+    group: 'Archive',
+  },
   folders: true,
   access: {
     read: () => true,

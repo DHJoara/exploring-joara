@@ -45,6 +45,7 @@ export const siteLocation = 'Burke County, North Carolina'
 export const Home: GlobalConfig = {
   slug: 'home',
   label: 'Home',
+  admin: { group: 'Website' },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user),
@@ -58,7 +59,7 @@ export const Home: GlobalConfig = {
         {
           name: 'image',
           type: 'upload' as const,
-          relationTo: 'pictures' as const,
+          relationTo: 'site_images' as const,
           admin: {
             description: 'Choose a card image. Leave empty to use the default image.',
           },
@@ -74,7 +75,7 @@ export const Home: GlobalConfig = {
     {
       name: 'banner',
       type: 'upload',
-      relationTo: 'pictures',
+      relationTo: 'site_images',
 
       admin: {
         description: 'Choose a landscape image. Leave empty to use the default banner.',

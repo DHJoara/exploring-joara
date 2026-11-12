@@ -4,11 +4,15 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: process.env.NEXT_PUBLIC_SERVER_URL
-      ? [new URL('/api/pictures/file/**', process.env.NEXT_PUBLIC_SERVER_URL)]
+      ? [
+          new URL('/api/pictures/file/**', process.env.NEXT_PUBLIC_SERVER_URL),
+          new URL('/api/site_images/file/**', process.env.NEXT_PUBLIC_SERVER_URL),
+        ]
       : [],
     localPatterns: [
       { pathname: '/images/**' },
       { pathname: '/api/pictures/file/**' },
+      { pathname: '/api/site_images/file/**' },
       {
         pathname: '/api/media/file/**',
       },
