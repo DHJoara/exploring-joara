@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-export function ArtifactModel({
+export function VirtualArtifactModel({
   src,
   poster,
   name,
@@ -21,7 +21,7 @@ export function ArtifactModel({
     <>
       <model-viewer
         onErrorCapture={() => setFailed(true)}
-        className="artifact-model"
+        className="virtual-artifact-model"
         src={src}
         poster={poster}
         alt={name}

@@ -23,7 +23,7 @@ const montserrat = Montserrat({
 // Search metadata, separate from the introduction displayed on the homepage.
 export const metadata = {
   description:
-    'Explore the archaeology, pictures, artifacts, and history of Joara in western North Carolina.',
+    'Explore the archaeology, pictures, virtual artifacts, and history of Joara in western North Carolina.',
   title: 'Exploring Joara',
 }
 

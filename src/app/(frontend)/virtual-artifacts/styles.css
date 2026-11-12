@@ -1,52 +1,52 @@
-.artifact-grid {
+.virtual-artifact-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
-.artifact-card {
+.virtual-artifact-card {
   text-decoration: none;
 }
-.artifact-card:hover {
+.virtual-artifact-card:hover {
   color: var(--accent);
 }
-.artifact-thumbnail {
+.virtual-artifact-thumbnail {
   position: relative;
   aspect-ratio: 4 / 3;
 }
-.artifact-thumbnail img {
+.virtual-artifact-thumbnail img {
   object-fit: cover;
 }
-.artifact-model {
+.virtual-artifact-model {
   display: block;
   width: 100%;
   height: 65svh;
   min-height: 300px;
   background: #eeede8;
 }
-.artifact-instructions {
+.virtual-artifact-instructions {
   color: var(--muted);
   font-size: 0.8125rem;
 }
-.artifact-description {
+.virtual-artifact-description {
   max-width: 650px;
   line-height: 1.7;
   white-space: pre-line;
 }
 @media (max-width: 900px) {
-  .artifact-grid {
+  .virtual-artifact-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (max-width: 560px) {
-  .artifact-grid {
+  .virtual-artifact-grid {
     grid-template-columns: 1fr;
   }
-  .artifact-model {
+  .virtual-artifact-model {
     height: 55svh;
   }
 }
 
-.artifact-pagination {
+.virtual-artifact-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,10 +55,10 @@
   margin-top: 32px;
   font-size: 0.875rem;
 }
-.artifact-pagination a {
+.virtual-artifact-pagination a {
   text-underline-offset: 0.25rem;
 }
-.artifact-pagination a:focus-visible {
+.virtual-artifact-pagination a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }

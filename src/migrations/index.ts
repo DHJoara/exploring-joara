@@ -1,3 +1,4 @@
+import * as migration_virtual_artifacts from './20261112_160000_rename_virtual_artifacts';
 import * as migration_20260918_151419_initial from './20260918_151419_initial';
 import * as migration_20261111_135150 from './20261111_135150';
 import * as migration_20261111_183833_consolidate_photos from './20261111_183833_consolidate_photos';
@@ -30,4 +31,5 @@ export const migrations = [
     down: migration_20261112_153451_split_site_images.down,
     name: '20261112_153451_split_site_images'
   },
+  { up: migration_virtual_artifacts.up, down: migration_virtual_artifacts.down, name: '20261112_160000_rename_virtual_artifacts' },
 ];

@@ -69,7 +69,7 @@ export interface Config {
   collections: {
     users: User;
     pictures: Picture;
-    artifacts: Artifact;
+    virtual_artifacts: VirtualArtifact;
     site_images: SiteImage;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
@@ -85,7 +85,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     pictures: PicturesSelect<false> | PicturesSelect<true>;
-    artifacts: ArtifactsSelect<false> | ArtifactsSelect<true>;
+    virtual_artifacts: VirtualArtifactsSelect<false> | VirtualArtifactsSelect<true>;
     site_images: SiteImagesSelect<false> | SiteImagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -207,9 +207,9 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "artifacts".
+ * via the `definition` "virtual_artifacts".
  */
-export interface Artifact {
+export interface VirtualArtifact {
   id: number;
   name: string;
   description?: string | null;
@@ -224,6 +224,8 @@ export interface Artifact {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * Images used for site specific.
@@ -278,8 +280,8 @@ export interface PayloadLockedDocument {
         value: number | Picture;
       } | null)
     | ({
-        relationTo: 'artifacts';
-        value: number | Artifact;
+        relationTo: 'virtual_artifacts';
+        value: number | VirtualArtifact;
       } | null)
     | ({
         relationTo: 'site_images';
@@ -374,9 +376,9 @@ export interface PicturesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "artifacts_select".
+ * via the `definition` "virtual_artifacts_select".
  */
-export interface ArtifactsSelect<T extends boolean = true> {
+export interface VirtualArtifactsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   thumbnail?: T;
@@ -390,6 +392,8 @@ export interface ArtifactsSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -474,7 +478,7 @@ export interface Home {
     image?: (number | null) | SiteImage;
     description: string;
   };
-  artifacts: {
+  virtualArtifacts: {
     /**
      * Choose a card image. Leave empty to use the default image.
      */
@@ -531,7 +535,7 @@ export interface HomeSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
-  artifacts?:
+  virtualArtifacts?:
     | T
     | {
         image?: T;

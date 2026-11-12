@@ -70,7 +70,7 @@ describe('Pictures and native folders', () => {
       data: { name: `Independent test ${token}`, folderType: ['pictures'] },
     })
     const { readFile } = await import('node:fs/promises')
-    const image = await readFile('public/images/artifact.png')
+    const image = await readFile('public/images/virtual-artifact.png')
     const file = () => ({
       data: image,
       mimetype: 'image/png',
@@ -206,27 +206,23 @@ describe('Pictures and native folders', () => {
   }, 20000)
 })
 
-describe('Artifacts', () => {
+describe('VirtualArtifacts', () => {
   it('requires a scan and photo on save, allows public reads, and restricts editing to staff', async () => {
     const token = crypto.randomUUID()
     const editor = await payload.create({
       collection: 'users',
       data: { email: `artifacts-${token}@example.test`, password: crypto.randomUUID() },
     })
-    const photoFolder = await payload.create({
-      collection: 'payload-folders',
-      data: { name: 'Test thumbnails', folderType: ['pictures'], showInGallery: false },
-    })
     const thumbnail = await payload.create({
-      collection: 'pictures',
-      data: { alt: 'Artifact photo', folder: photoFolder.id },
-      filePath: 'public/images/artifact.png',
+      collection: 'site_images',
+      data: { alt: 'Virtual artifact photo' },
+      filePath: 'public/images/virtual-artifact.png',
     })
     let artifactID: number | undefined
     try {
       await expect(
         payload.create({
-          collection: 'artifacts',
+          collection: 'virtual_artifacts',
           data: { name: 'Missing scan', thumbnail: thumbnail.id },
           user: editor,
           overrideAccess: false,
@@ -235,7 +231,7 @@ describe('Artifacts', () => {
       await expect(
         // @ts-expect-error Verify runtime validation also rejects a missing thumbnail.
         payload.create({
-          collection: 'artifacts',
+          collection: 'virtual_artifacts',
           data: { name: 'Missing photo' },
           filePath: 'tests/fixtures/triangle.glb',
           user: editor,
@@ -243,15 +239,15 @@ describe('Artifacts', () => {
         }),
       ).rejects.toThrow()
       const artifact = await payload.create({
-        collection: 'artifacts',
-        data: { name: `Artifact ${token}`, thumbnail: thumbnail.id },
+        collection: 'virtual_artifacts',
+        data: { name: `VirtualArtifact ${token}`, thumbnail: thumbnail.id },
         filePath: 'tests/fixtures/triangle.glb',
         user: editor,
         overrideAccess: false,
       })
       artifactID = artifact.id
       const saved = await payload.findByID({
-        collection: 'artifacts',
+        collection: 'virtual_artifacts',
         id: artifact.id,
         overrideAccess: false,
       })
@@ -259,26 +255,26 @@ describe('Artifacts', () => {
       expect(saved.name).toBe(artifact.name)
       await expect(
         payload.update({
-          collection: 'artifacts',
+          collection: 'virtual_artifacts',
           id: artifact.id,
           data: { description: 'Unauthorized' },
           overrideAccess: false,
         }),
       ).rejects.toThrow()
       await expect(
-        payload.delete({ collection: 'artifacts', id: artifact.id, overrideAccess: false }),
+        payload.delete({ collection: 'virtual_artifacts', id: artifact.id, overrideAccess: false }),
       ).rejects.toThrow()
       await expect(
         payload.create({
-          collection: 'artifacts',
+          collection: 'virtual_artifacts',
           data: { name: 'Unauthorized', thumbnail: thumbnail.id },
           filePath: 'tests/fixtures/triangle.glb',
           overrideAccess: false,
         }),
       ).rejects.toThrow()
     } finally {
-      if (artifactID) await payload.delete({ collection: 'artifacts', id: artifactID })
-      await payload.delete({ collection: 'payload-folders', id: photoFolder.id })
+      if (artifactID) await payload.delete({ collection: 'virtual_artifacts', id: artifactID })
+      await payload.delete({ collection: 'site_images', id: thumbnail.id })
       await payload.delete({ collection: 'users', id: editor.id })
     }
   }, 20000)

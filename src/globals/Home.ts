@@ -14,12 +14,12 @@ export const siteSections = [
     linkLabel: 'Browse Pictures',
   },
   {
-    title: 'Artifacts',
-    href: '/artifacts',
-    key: 'artifacts' as const,
-    imageSrc: '/images/artifact.png',
+    title: 'Virtual Artifacts',
+    href: '/virtual-artifacts',
+    key: 'virtualArtifacts' as const,
+    imageSrc: '/images/virtual-artifact.png',
     defaultDescription: 'View the objects uncovered at Joara and explore them in three dimensions.',
-    linkLabel: 'Explore Artifacts',
+    linkLabel: 'Explore Virtual Artifacts',
   },
   {
     title: 'Timeline',

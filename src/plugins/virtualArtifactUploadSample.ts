@@ -9,8 +9,8 @@ import type { R2StorageOptions } from '@payloadcms/storage-r2'
 import { ValidationError, type Plugin } from 'payload'
 
 // Register after r2Storage so its upload handlers are already present.
-export const artifactUploadSample = (bucket: R2StorageOptions['bucket']): Plugin => (config) => {
-  const collection = config.collections!.find(({ slug }) => slug === 'artifacts')!
+export const virtualArtifactUploadSample = (bucket: R2StorageOptions['bucket']): Plugin => (config) => {
+  const collection = config.collections!.find(({ slug }) => slug === 'virtual_artifacts')!
   if (!collection.upload || typeof collection.upload !== 'object') return config
   // R2 returns an empty body for large client uploads. Supply a sample for Payload's MIME check.
   collection.upload.handlers!.push(async (req, { params: { clientUploadContext, filename } }) => {

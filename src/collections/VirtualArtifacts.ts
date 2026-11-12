@@ -1,14 +1,14 @@
 import type { CollectionConfig } from 'payload'
 import { generateThumbnail } from '../endpoints/generateThumbnail'
 
-export const Artifacts: CollectionConfig = {
-  slug: 'artifacts',
+export const VirtualArtifacts: CollectionConfig = {
+  slug: 'virtual_artifacts',
   endpoints: [{ path: '/thumbnail', method: 'post', handler: generateThumbnail }],
   admin: {
     group: 'Archive',
     useAsTitle: 'name',
     components: {
-      edit: { Upload: '@/components/ArtifactUpload#ArtifactUpload' },
+      edit: { Upload: '@/components/VirtualArtifactUpload#VirtualArtifactUpload' },
     },
   },
   access: {
@@ -18,8 +18,6 @@ export const Artifacts: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   upload: {
-    crop: false,
-    focalPoint: false,
     mimeTypes: ['model/gltf-binary'],
   },
   fields: [

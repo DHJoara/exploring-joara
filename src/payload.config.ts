@@ -9,13 +9,13 @@ import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
 
 import { Users } from './collections/Users'
-import { Artifacts } from './collections/Artifacts'
+import { VirtualArtifacts } from './collections/VirtualArtifacts'
 import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
 import { SiteImages } from './collections/SiteImages'
 import { Pictures } from './collections/Pictures'
 import { pictureFolders } from './collections/PictureFolders'
-import { artifactUploadSample } from './plugins/artifactUploadSample'
+import { virtualArtifactUploadSample } from './plugins/virtualArtifactUploadSample'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -73,7 +73,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Pictures, Artifacts, SiteImages],
+  collections: [Users, Pictures, VirtualArtifacts, SiteImages],
   folders: pictureFolders,
   globals: [Home, Timeline],
   editor: lexicalEditor(),
@@ -100,10 +100,10 @@ export default buildConfig({
       collections: {
         pictures: true,
         site_images: true,
-        artifacts: true,
+        virtual_artifacts: true,
       },
     }),
-    artifactUploadSample(cloudflare.env.R2),
+    virtualArtifactUploadSample(cloudflare.env.R2),
   ],
 })
 

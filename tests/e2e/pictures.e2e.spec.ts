@@ -21,7 +21,7 @@ test.beforeAll(async () => {
   childID = child.id
   for (const prefix of ['a', 'b']) {
     const { readFile } = await import('node:fs/promises')
-    const data = await readFile('public/images/artifact.png')
+    const data = await readFile('public/images/virtual-artifact.png')
     await payload.create({
       collection: 'pictures',
       data: { folder: folderID },

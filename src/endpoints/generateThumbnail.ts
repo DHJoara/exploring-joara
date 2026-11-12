@@ -13,7 +13,7 @@ export const generateThumbnail: PayloadHandler = async (req) => {
     data: {},
     file: {
       data: Buffer.from(await file.arrayBuffer()),
-      name: `artifact-${crypto.randomUUID()}.png`,
+      name: `virtual-artifact-${crypto.randomUUID()}.png`,
       mimetype: 'image/png',
       size: file.size,
     },

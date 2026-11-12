@@ -7,7 +7,7 @@ import './styles.css'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ArtifactsPage({
+export default async function VirtualArtifactsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>
@@ -18,7 +18,7 @@ export default async function ArtifactsPage({
 
   const payload = await getPayload({ config })
   const artifacts = await payload.find({
-    collection: 'artifacts',
+    collection: 'virtual_artifacts',
     sort: 'name',
     limit: 21,
     page,
@@ -28,14 +28,14 @@ export default async function ArtifactsPage({
 
   return (
     <>
-      <h1>Artifacts</h1>
-      <div className="artifact-grid">
+      <h1>Virtual Artifacts</h1>
+      <div className="virtual-artifact-grid">
         {artifacts.docs.map((artifact) => {
           const thumbnail = typeof artifact.thumbnail === 'object' ? artifact.thumbnail : null
           return (
-            <Link className="artifact-card" href={`/artifacts/${artifact.id}`} key={artifact.id}>
+            <Link className="virtual-artifact-card" href={`/virtual-artifacts/${artifact.id}`} key={artifact.id}>
               {thumbnail?.url && (
-                <div className="artifact-thumbnail">
+                <div className="virtual-artifact-thumbnail">
                   <Image
                     src={thumbnail.url}
                     alt={artifact.name}
@@ -50,13 +50,13 @@ export default async function ArtifactsPage({
         })}
       </div>
       {artifacts.totalPages > 1 && (
-        <nav className="artifact-pagination" aria-label="Artifact pages">
-          {artifacts.hasPrevPage && <Link href={`/artifacts?page=${page - 1}`}>← Previous</Link>}
+        <nav className="virtual-artifact-pagination" aria-label="Virtual artifact pages">
+          {artifacts.hasPrevPage && <Link href={`/virtual-artifacts?page=${page - 1}`}>← Previous</Link>}
           <span>Page {page} of {artifacts.totalPages}</span>
-          {artifacts.hasNextPage && <Link href={`/artifacts?page=${page + 1}`}>Next →</Link>}
+          {artifacts.hasNextPage && <Link href={`/virtual-artifacts?page=${page + 1}`}>Next →</Link>}
         </nav>
       )}
-      {!artifacts.docs.length && <p className="section-copy">No artifacts have been added yet.</p>}
+      {!artifacts.docs.length && <p className="section-copy">No virtual artifacts have been added yet.</p>}
     </>
   )
 }

@@ -10,10 +10,10 @@ import {
 } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 
-export function ArtifactUpload() {
+export function VirtualArtifactUpload() {
   const { getEntityConfig } = useConfig()
   const { initialState } = useDocumentInfo()
-  const { upload } = getEntityConfig({ collectionSlug: 'artifacts' })
+  const { upload } = getEntityConfig({ collectionSlug: 'virtual_artifacts' })
 
   const processing = useFormProcessing()
   const file = useFormFields(([fields]) => fields.file?.value) as File | undefined
@@ -68,7 +68,7 @@ export function ArtifactUpload() {
       const form = new FormData()
       form.append('file', blob, 'thumbnail.png')
 
-      const response = await fetch('/api/artifacts/thumbnail', {
+      const response = await fetch('/api/virtual_artifacts/thumbnail', {
         method: 'POST',
         body: form,
         signal: controller.signal,
@@ -100,12 +100,12 @@ export function ArtifactUpload() {
 
   return (
     <>
-      <Upload collectionSlug="artifacts" uploadConfig={upload} initialState={initialState} />
+      <Upload collectionSlug="virtual_artifacts" uploadConfig={upload} initialState={initialState} />
 
       <div role="status" aria-live="polite">
         {processing ? (
           <>
-            <progress aria-label="Saving artifact" />
+            <progress aria-label="Saving virtual artifact" />
             <p>Uploading and saving… Keep this page open.</p>
           </>
         ) : (

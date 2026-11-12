@@ -3,24 +3,20 @@ import { getPayload } from 'payload'
 import type { ModelViewerElement } from '@google/model-viewer'
 import config from '../../src/payload.config'
 
-const artifactName = `Artifact test ${crypto.randomUUID()}`
+const artifactName = `VirtualArtifact test ${crypto.randomUUID()}`
 let artifactID: number
-let photoFolderID: number
+let thumbnailID: number
 
 test.beforeAll(async () => {
   const payload = await getPayload({ config })
-  const photoFolder = await payload.create({
-    collection: 'payload-folders',
-    data: { name: 'Test thumbnails', folderType: ['pictures'], showInGallery: false },
-  })
   const thumbnail = await payload.create({
-    collection: 'pictures',
-    data: { alt: 'Artifact photo', folder: photoFolder.id },
-    filePath: 'public/images/artifact.png',
+    collection: 'site_images',
+    data: { alt: 'Virtual artifact photo' },
+    filePath: 'public/images/virtual-artifact.png',
   })
-  photoFolderID = photoFolder.id
+  thumbnailID = thumbnail.id
   const artifact = await payload.create({
-    collection: 'artifacts',
+    collection: 'virtual_artifacts',
     data: {
       name: artifactName,
       description: 'A test artifact with a photograph and interactive scan.',
@@ -34,18 +30,18 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   const payload = await getPayload({ config })
   await payload.delete({
-    collection: 'artifacts',
+    collection: 'virtual_artifacts',
     where: { id: { equals: artifactID } },
   })
-  if (photoFolderID) await payload.delete({ collection: 'payload-folders', id: photoFolderID })
+  if (thumbnailID) await payload.delete({ collection: 'site_images', id: thumbnailID })
 })
 
 test('loads a GLB and supports rotation and zoom on desktop and mobile', async ({ page }) => {
-  await page.goto('http://localhost:3000/artifacts')
+  await page.goto('http://localhost:3000/virtual-artifacts')
   await expect(
-    page.getByRole('link', { name: new RegExp(`^Artifact photo ${artifactName}$`) }),
+    page.getByRole('link', { name: new RegExp(`^Virtual artifact photo ${artifactName}$`) }),
   ).toBeVisible()
-  await page.getByRole('link', { name: new RegExp(`^Artifact photo ${artifactName}$`) }).click()
+  await page.getByRole('link', { name: new RegExp(`^Virtual artifact photo ${artifactName}$`) }).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(artifactName)
   const viewer = page.locator('model-viewer')
   await expect(viewer).toHaveAttribute('camera-controls', '')
