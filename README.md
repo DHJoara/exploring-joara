@@ -121,3 +121,17 @@ This also applies to your own code, in the case of importing a lot of libraries 
 ## Questions
 
 If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+
+### Public content caching
+
+Public Payload reads use Next.js `use cache` and share one cache tag: `public-content`. Payload
+saves and deletions mark it stale; the next visit refreshes content in the
+background. A 24-hour revalidation interval provides a fallback if tag invalidation
+is missed; the next visit after that interval triggers a background refresh.
+Gallery folder and page queries have separate cache keys.
+
+OpenNext stores cached content in R2 and tag timestamps in the existing D1
+database using the `NEXT_TAG_CACHE_D1` binding. Its deploy/preview command creates
+the tag table. A Durable Object queue coordinates page regeneration using OpenNext defaults.
+The queue does not set a cache lifetime; refreshes use both tags and the 24-hour fallback.
+Admin, authentication, and uploads do not use the public read cache.

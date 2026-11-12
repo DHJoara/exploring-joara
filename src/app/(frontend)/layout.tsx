@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { Libre_Caslon_Text, Montserrat } from 'next/font/google'
 import { SiteNavigation } from '@/components/SiteNavigation'
@@ -41,9 +41,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link className="wordmark" href="/">
                 {siteName}
               </Link>
-              <SiteNavigation navigation={navigation} />
+              <Suspense
+                fallback={
+                  <nav aria-label="Main navigation">
+                    {navigation.map(([label, href]) => (
+                      <Link href={href} key={href}>
+                        {label}
+                      </Link>
+                    ))}
+                  </nav>
+                }
+              >
+                <SiteNavigation navigation={navigation} />
+              </Suspense>
             </aside>
-            <main>{children}</main>
+            <main>
+              <Suspense fallback={<p>Loading…</p>}>{children}</Suspense>
+            </main>
           </div>
           <footer className="site-footer">
             <div className="footer-top">

@@ -1,13 +1,10 @@
 import { SectionBlurb } from '@/components/SectionBlurb'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { cachedPayload } from '@/utilities/cachedPayload'
 import { PictureGallery } from '@/components/PictureGallery'
 import type { FolderInterface } from '@/payload-types'
 import './styles.css'
-
-export const dynamic = 'force-dynamic'
 
 export default async function PicturesPage({
   searchParams,
@@ -19,7 +16,7 @@ export default async function PicturesPage({
   if (!Number.isSafeInteger(page) || page < 1) notFound()
   const folderID = folderParam === undefined ? null : Number(folderParam)
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
-  const payload = await getPayload({ config })
+  const payload = cachedPayload
   const section = await payload.findGlobal({ slug: 'pictures_page' })
   const findFolder = (id: number | null | undefined) =>
     id == null ? null : payload.findByID({ collection: 'payload-folders', id, disableErrors: true })
@@ -93,7 +90,9 @@ export default async function PicturesPage({
                 </svg>
                 <span>{item.name}</span>
                 {folderID === null && (
-                  <span className="picture-folder-arrow" aria-hidden="true">→</span>
+                  <span className="picture-folder-arrow" aria-hidden="true">
+                    →
+                  </span>
                 )}
               </Link>
             </li>
@@ -113,7 +112,9 @@ export default async function PicturesPage({
           {pictures.hasPrevPage && (
             <Link href={`/pictures?${folderQuery}page=${page - 1}`}>← Previous</Link>
           )}
-          <span>Page {page} of {pictures.totalPages}</span>
+          <span>
+            Page {page} of {pictures.totalPages}
+          </span>
           {pictures.hasNextPage && (
             <Link href={`/pictures?${folderQuery}page=${page + 1}`}>Next →</Link>
           )}

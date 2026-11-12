@@ -1,17 +1,14 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { cachedPayload } from '@/utilities/cachedPayload'
 import { VirtualArtifactModel } from '@/components/VirtualArtifactModel'
 import '../styles.css'
-
-export const dynamic = 'force-dynamic'
 
 export default async function VirtualArtifactPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const artifactID = Number(id)
   if (!Number.isSafeInteger(artifactID) || artifactID < 1) notFound()
-  const payload = await getPayload({ config })
+  const payload = cachedPayload
   const artifact = await payload.findByID({
     collection: 'virtual_artifacts',
     id: artifactID,
@@ -36,7 +33,9 @@ export default async function VirtualArtifactPage({ params }: { params: Promise<
         Drag to rotate. Right-drag or Shift-drag to pan; on touchscreens, drag with two fingers.
         Scroll or pinch to zoom.
       </p>
-      {artifact.description && <p className="virtual-artifact-description">{artifact.description}</p>}
+      {artifact.description && (
+        <p className="virtual-artifact-description">{artifact.description}</p>
+      )}
     </>
   )
 }

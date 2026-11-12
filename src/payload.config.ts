@@ -1,3 +1,4 @@
+import { revalidatePublicContent } from './utilities/revalidatePublicContent'
 import fs from 'fs'
 import path from 'path'
 import { sqliteD1Adapter } from '@payloadcms/db-d1-sqlite'
@@ -76,9 +77,25 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Pictures, VirtualArtifacts, SiteImages],
+  collections: [
+    Users,
+    ...[Pictures, VirtualArtifacts, SiteImages].map((collection) => ({
+      ...collection,
+      hooks: {
+        ...collection.hooks,
+        afterChange: [...(collection.hooks?.afterChange ?? []), revalidatePublicContent],
+        afterDelete: [...(collection.hooks?.afterDelete ?? []), revalidatePublicContent],
+      },
+    })),
+  ],
   folders: pictureFolders,
-  globals: [Home, PicturesPage, VirtualArtifactsPage, Timeline, VirtualMuseum],
+  globals: [Home, PicturesPage, VirtualArtifactsPage, Timeline, VirtualMuseum].map((global) => ({
+    ...global,
+    hooks: {
+      ...global.hooks,
+      afterChange: [...(global.hooks?.afterChange ?? []), revalidatePublicContent],
+    },
+  })),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -117,6 +134,8 @@ function getCloudflareContextFromWrangler(): Promise<CloudflareContext> {
       getPlatformProxy({
         environment: process.env.CLOUDFLARE_ENV,
         remoteBindings: isProduction,
+        // Parallel build workers must not share a local Durable Object database.
+        persist: isProduction ? false : undefined,
       } satisfies GetPlatformProxyOptions),
   )
 }

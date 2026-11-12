@@ -21,13 +21,25 @@
 	},
 	"d1_databases": [
 		{
+			"binding": "NEXT_TAG_CACHE_D1",
+			"database_id": "afef6000-612c-4f5d-aaa7-d97853255aed",
+			"database_name": "exploring-joara",
+		},
+		{
 			"binding": "D1",
 			"database_id": "afef6000-612c-4f5d-aaa7-d97853255aed",
 			"database_name": "exploring-joara",
 			"remote": true,
 		},
 	],
+	"durable_objects": {
+		"bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }],
+	},
+	"migrations": [
+		{ "tag": "public-cache-v1", "new_sqlite_classes": ["DOQueueHandler"] },
+	],
 	"services": [
+		{ "binding": "WORKER_SELF_REFERENCE", "service": "exploring-joara" },
 		// The service should match the "name" of your worker
 		// {
 		//   "binding": "WORKER_SELF_REFERENCE",
@@ -35,6 +47,7 @@
 		// },
 	],
 	"r2_buckets": [
+		{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "exploring-joara" },
 		{
 			"binding": "R2",
 			"bucket_name": "exploring-joara",

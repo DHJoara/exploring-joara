@@ -1,3 +1,4 @@
+import { revalidatePublicContent } from '../utilities/revalidatePublicContent'
 import type { Config } from 'payload'
 
 // Extend the native folder collection; keep its validation and nested-folder handling.
@@ -8,6 +9,8 @@ export const pictureFolders: Exclude<Config['folders'], false | undefined> = {
       access: { ...collection.access, read: () => true },
       hooks: {
         ...collection.hooks,
+        afterChange: [...(collection.hooks?.afterChange ?? []), revalidatePublicContent],
+        afterDelete: [...(collection.hooks?.afterDelete ?? []), revalidatePublicContent],
         beforeDelete: [
           async (args) => {
             const { id, req } = args

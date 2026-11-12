@@ -1,13 +1,9 @@
 import Image from 'next/image'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { cachedPayload } from '@/utilities/cachedPayload'
 import { siteSections, siteName } from '@/globals/Home'
 
-// TODO: Look more into this Read the latest saved homepage content on every request.
-export const dynamic = 'force-dynamic'
-
 export default async function HomePage() {
-  const payload = await getPayload({ config })
+  const payload = cachedPayload
   const homeContent = await payload.findGlobal({ slug: 'home' })
   const homeCards = siteSections.map((section) => {
     const content = homeContent[section.key]
