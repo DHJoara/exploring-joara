@@ -46,15 +46,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main>{children}</main>
           </div>
           <footer className="site-footer">
-            <div className="footer-about">
-              <Link className="footer-title" href="/">
-                {siteName}
-              </Link>
-              <p>An archaeological archive of Joara and the upper Catawba Valley.</p>
-              <p>Made by NCSSM Digital Humanities Class of 2027.</p>
+            <div className="footer-top">
+              <div className="footer-about">
+                <Link className="footer-title" href="/">
+                  {siteName}
+                </Link>
+                <p>An archaeological archive of Joara and the upper Catawba Valley.</p>
+              </div>
             </div>
             <div className="footer-bottom">
               <span>{siteLocation}</span>
+              <p className="footer-credit">
+                Made with ❤️ by NCSSM Digital Humanities Class of 2027.
+              </p>
               <Link href="/admin">
                 Staff login <span aria-hidden="true">↗</span>
               </Link>
