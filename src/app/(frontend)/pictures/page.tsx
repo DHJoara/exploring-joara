@@ -11,9 +11,11 @@ export const dynamic = 'force-dynamic'
 export default async function PicturesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ folder?: string }>
+  searchParams: Promise<{ folder?: string; page?: string; viewer?: string }>
 }) {
-  const { folder: folderParam } = await searchParams
+  const { folder: folderParam, page: pageParam, viewer } = await searchParams
+  const page = pageParam === undefined ? 1 : Number(pageParam)
+  if (!Number.isSafeInteger(page) || page < 1) notFound()
   const folderID = folderParam === undefined ? null : Number(folderParam)
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
   const payload = await getPayload({ config })
@@ -41,14 +43,17 @@ export default async function PicturesPage({
     }),
     // Root uploads are website assets; only browse pictures inside folders.
     folderID === null
-      ? Promise.resolve({ docs: [] })
+      ? Promise.resolve({ docs: [], totalDocs: 0, totalPages: 1, hasPrevPage: false, hasNextPage: false })
       : payload.find({
           collection: 'pictures',
           where: folderFilter,
           sort: 'filename',
-          pagination: false,
+          limit: 21,
+          page,
         }),
   ])
+
+  if (page > Math.max(1, pictures.totalPages)) notFound()
 
   const galleryPictures = pictures.docs
     .filter((picture) => Boolean(picture.url))
@@ -95,7 +100,25 @@ export default async function PicturesPage({
           ))}
         </ul>
       )}
-      <PictureGallery pictures={galleryPictures} />
+      <PictureGallery
+        key={`${folderID}-${page}`}
+        pictures={galleryPictures}
+        folderID={folderID}
+        page={page}
+        totalPictures={pictures.totalDocs}
+        viewer={viewer}
+      />
+      {pictures.totalPages > 1 && (
+        <nav className="picture-pagination" aria-label="Picture pages">
+          {pictures.hasPrevPage && (
+            <Link href={`/pictures?folder=${folderID}&page=${page - 1}`}>← Previous</Link>
+          )}
+          <span>Page {page} of {pictures.totalPages}</span>
+          {pictures.hasNextPage && (
+            <Link href={`/pictures?folder=${folderID}&page=${page + 1}`}>Next →</Link>
+          )}
+        </nav>
+      )}
       {!folders.docs.length && !pictures.docs.length && (
         <p className="section-copy">No pictures have been added here yet.</p>
       )}

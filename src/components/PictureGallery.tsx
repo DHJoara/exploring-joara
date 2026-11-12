@@ -1,12 +1,23 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState, useTransition } from 'react'
 
 type GalleryPicture = { id: number; url: string; alt: string; filename: string }
 
-export function PictureGallery({ pictures }: { pictures: GalleryPicture[] }) {
-  const [selected, setSelected] = useState<number | null>(null)
+export function PictureGallery({ pictures, folderID, page, totalPictures, viewer }: {
+  pictures: GalleryPicture[]
+  folderID: number | null
+  page: number
+  totalPictures: number
+  viewer?: string
+}) {
+  const router = useRouter()
+  const [loading, startTransition] = useTransition()
+  const [selected, setSelected] = useState<number | null>(
+    viewer === 'first' ? 0 : viewer === 'last' ? pictures.length - 1 : null,
+  )
   const dialog = useRef<HTMLDialogElement>(null)
   const picture = selected === null ? null : pictures[selected]
 
@@ -15,9 +26,25 @@ export function PictureGallery({ pictures }: { pictures: GalleryPicture[] }) {
   }, [selected])
 
   function navigate(direction: number) {
-    setSelected((index) =>
-      index === null ? null : (index + direction + pictures.length) % pictures.length,
-    )
+    if (selected === null || loading) return
+    const index = selected + direction
+    if (index >= 0 && index < pictures.length) {
+      setSelected(index)
+      return
+    }
+
+    const totalPages = Math.ceil(totalPictures / 21)
+    const nextPage = ((page - 1 + direction + totalPages) % totalPages) + 1
+    if (nextPage === page) {
+      setSelected(direction > 0 ? 0 : pictures.length - 1)
+      return
+    }
+    startTransition(() => {
+      router.push(
+        `/pictures?folder=${folderID}&page=${nextPage}&viewer=${direction > 0 ? 'first' : 'last'}`,
+        { scroll: false },
+      )
+    })
   }
 
   return (
@@ -44,7 +71,10 @@ export function PictureGallery({ pictures }: { pictures: GalleryPicture[] }) {
         ref={dialog}
         className="picture-viewer"
         aria-label="Picture viewer"
-        onClose={() => setSelected(null)}
+        onClose={() => {
+          setSelected(null)
+          if (viewer) router.replace(`/pictures?folder=${folderID}&page=${page}`, { scroll: false })
+        }}
         onKeyDown={(event) => {
           if (event.key === 'ArrowLeft') {
             event.preventDefault()
@@ -70,14 +100,15 @@ export function PictureGallery({ pictures }: { pictures: GalleryPicture[] }) {
             <div className="picture-viewer-image">
               <Image key={picture.id} src={picture.url} alt={picture.alt} fill sizes="90vw" />
             </div>
+            <p role="status">{loading ? 'Loading pictures…' : ''}</p>
             <div className="picture-viewer-bar">
-              <button type="button" onClick={() => navigate(-1)} disabled={pictures.length < 2}>
+              <button type="button" onClick={() => navigate(-1)} disabled={loading || totalPictures < 2}>
                 Previous
               </button>
               <span>
-                {selected! + 1} / {pictures.length}
+                {(page - 1) * 21 + selected! + 1} / {totalPictures}
               </span>
-              <button type="button" onClick={() => navigate(1)} disabled={pictures.length < 2}>
+              <button type="button" onClick={() => navigate(1)} disabled={loading || totalPictures < 2}>
                 Next
               </button>
             </div>
