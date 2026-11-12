@@ -1,3 +1,4 @@
+import { SectionBlurb } from '@/components/SectionBlurb'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -17,6 +18,7 @@ export default async function VirtualArtifactsPage({
   if (!Number.isSafeInteger(page) || page < 1) notFound()
 
   const payload = await getPayload({ config })
+  const section = await payload.findGlobal({ slug: 'virtual_artifacts_page' })
   const artifacts = await payload.find({
     collection: 'virtual_artifacts',
     sort: 'name',
@@ -29,6 +31,7 @@ export default async function VirtualArtifactsPage({
   return (
     <>
       <h1>Virtual Artifacts</h1>
+      <SectionBlurb text={section.blurb} />
       <div className="virtual-artifact-grid">
         {artifacts.docs.map((artifact) => {
           const thumbnail = typeof artifact.thumbnail === 'object' ? artifact.thumbnail : null

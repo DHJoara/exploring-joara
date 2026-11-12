@@ -1,3 +1,4 @@
+import { SectionBlurb } from '@/components/SectionBlurb'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -19,6 +20,7 @@ export default async function PicturesPage({
   const folderID = folderParam === undefined ? null : Number(folderParam)
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
   const payload = await getPayload({ config })
+  const section = await payload.findGlobal({ slug: 'pictures_page' })
   const findFolder = (id: number | null | undefined) =>
     id == null ? null : payload.findByID({ collection: 'payload-folders', id, disableErrors: true })
   const folder = await findFolder(folderID)
@@ -80,6 +82,7 @@ export default async function PicturesPage({
         ))}
       </nav>
       <h1>{folder?.name ?? 'Pictures'}</h1>
+      {folderID === null && <SectionBlurb text={section.blurb} />}
       {folders.docs.length > 0 && (
         <ul className={`picture-folders${folderID === null ? ' picture-folders-root' : ''}`}>
           {folders.docs.map((item) => (

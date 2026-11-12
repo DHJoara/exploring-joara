@@ -99,11 +99,17 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     home: Home;
+    pictures_page: PicturesPage;
+    virtual_artifacts_page: VirtualArtifactsPage;
     timeline: Timeline;
+    virtual_museum: VirtualMuseum;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
+    pictures_page: PicturesPageSelect<false> | PicturesPageSelect<true>;
+    virtual_artifacts_page: VirtualArtifactsPageSelect<false> | VirtualArtifactsPageSelect<true>;
     timeline: TimelineSelect<false> | TimelineSelect<true>;
+    virtual_museum: VirtualMuseumSelect<false> | VirtualMuseumSelect<true>;
   };
   locale: null;
   widgets: {
@@ -511,14 +517,57 @@ export interface Home {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pictures_page".
+ */
+export interface PicturesPage {
+  id: number;
+  /**
+   * Introduction displayed above this section. Separate paragraphs with a blank line.
+   */
+  blurb: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "virtual_artifacts_page".
+ */
+export interface VirtualArtifactsPage {
+  id: number;
+  /**
+   * Introduction displayed above this section. Separate paragraphs with a blank line.
+   */
+  blurb: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "timeline".
  */
 export interface Timeline {
   id: number;
   /**
+   * Introduction displayed above this section. Separate paragraphs with a blank line.
+   */
+  blurb: string;
+  /**
    * Paste the iframe’s src URL, not the full iframe code.
    */
   embedURL: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "virtual_museum".
+ */
+export interface VirtualMuseum {
+  id: number;
+  /**
+   * Introduction displayed above this section. Separate paragraphs with a blank line.
+   */
+  blurb: string;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -560,10 +609,41 @@ export interface HomeSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pictures_page_select".
+ */
+export interface PicturesPageSelect<T extends boolean = true> {
+  blurb?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "virtual_artifacts_page_select".
+ */
+export interface VirtualArtifactsPageSelect<T extends boolean = true> {
+  blurb?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "timeline_select".
  */
 export interface TimelineSelect<T extends boolean = true> {
+  blurb?: T;
   embedURL?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "virtual_museum_select".
+ */
+export interface VirtualMuseumSelect<T extends boolean = true> {
+  blurb?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

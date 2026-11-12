@@ -5,6 +5,7 @@ import * as migration_20261111_224300_home_card_images from './20261111_224300_h
 import * as migration_20261112_153451_split_site_images from './20261112_153451_split_site_images';
 import * as migration_20261112_160000_rename_virtual_artifacts from './20261112_160000_rename_virtual_artifacts';
 import * as migration_20261112_160254_public_picture_folders from './20261112_160254_public_picture_folders';
+import * as migration_20261112_180559_section_blurbs from './20261112_180559_section_blurbs';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261112_160254_public_picture_folders.up,
     down: migration_20261112_160254_public_picture_folders.down,
-    name: '20261112_160254_public_picture_folders'
+    name: '20261112_160254_public_picture_folders',
+  },
+  {
+    up: migration_20261112_180559_section_blurbs.up,
+    down: migration_20261112_180559_section_blurbs.down,
+    name: '20261112_180559_section_blurbs'
   },
 ];

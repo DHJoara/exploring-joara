@@ -1,3 +1,4 @@
+import { SectionBlurb } from '@/components/SectionBlurb'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import './styles.css'
@@ -11,6 +12,7 @@ export default async function TimelinePage() {
   return (
     <>
       <h1>Timeline</h1>
+      <SectionBlurb text={timeline.blurb} />
       <iframe
         className="timeline-embed"
         src={timeline.embedURL}

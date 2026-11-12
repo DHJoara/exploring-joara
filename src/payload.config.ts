@@ -10,6 +10,9 @@ import { r2Storage } from '@payloadcms/storage-r2'
 
 import { Users } from './collections/Users'
 import { VirtualArtifacts } from './collections/VirtualArtifacts'
+import { Pictures as PicturesPage } from './globals/Pictures'
+import { VirtualArtifacts as VirtualArtifactsPage } from './globals/VirtualArtifacts'
+import { VirtualMuseum } from './globals/VirtualMuseum'
 import { Home } from './globals/Home'
 import { Timeline } from './globals/Timeline'
 import { SiteImages } from './collections/SiteImages'
@@ -75,7 +78,7 @@ export default buildConfig({
   },
   collections: [Users, Pictures, VirtualArtifacts, SiteImages],
   folders: pictureFolders,
-  globals: [Home, Timeline],
+  globals: [Home, PicturesPage, VirtualArtifactsPage, Timeline, VirtualMuseum],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

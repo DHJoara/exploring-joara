@@ -1,22 +1,20 @@
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import { SectionBlurb } from '@/components/SectionBlurb'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-const sections: Record<string, { title: string; description: string }> = {
-  'virtual-museum': {
-    title: 'Virtual Museum',
-    description:
-      'The virtual museum is coming soon. In the meantime, explore Joara through the archive.',
-  },
-}
+export const dynamic = 'force-dynamic'
 
 export default async function SectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section } = await params
-  const content = sections[section]
-  if (!content) notFound()
+  if (section !== 'virtual-museum') notFound()
+  const payload = await getPayload({ config })
+  const content = await payload.findGlobal({ slug: 'virtual_museum' })
   return (
     <>
-      <h1>{content.title}</h1>
-      <p className="section-copy">{content.description}</p>
+      <h1>Virtual Museum</h1>
+      <SectionBlurb text={content.blurb} />
       <Link className="back-link" href="/">
         Back to Exploring Joara
       </Link>
