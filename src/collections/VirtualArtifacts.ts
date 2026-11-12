@@ -3,6 +3,7 @@ import { generateThumbnail } from '../endpoints/generateThumbnail'
 
 export const VirtualArtifacts: CollectionConfig = {
   slug: 'virtual_artifacts',
+  labels: { singular: 'Virtual Artifact', plural: 'Virtual Artifacts' },
   endpoints: [{ path: '/thumbnail', method: 'post', handler: generateThumbnail }],
   admin: {
     group: 'Archive',
