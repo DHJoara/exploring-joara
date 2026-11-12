@@ -1,9 +1,10 @@
-import * as migration_virtual_artifacts from './20261112_160000_rename_virtual_artifacts';
 import * as migration_20260918_151419_initial from './20260918_151419_initial';
 import * as migration_20261111_135150 from './20261111_135150';
 import * as migration_20261111_183833_consolidate_photos from './20261111_183833_consolidate_photos';
 import * as migration_20261111_224300_home_card_images from './20261111_224300_home_card_images';
 import * as migration_20261112_153451_split_site_images from './20261112_153451_split_site_images';
+import * as migration_20261112_160000_rename_virtual_artifacts from './20261112_160000_rename_virtual_artifacts';
+import * as migration_20261112_160254_public_picture_folders from './20261112_160254_public_picture_folders';
 
 export const migrations = [
   {
@@ -29,7 +30,16 @@ export const migrations = [
   {
     up: migration_20261112_153451_split_site_images.up,
     down: migration_20261112_153451_split_site_images.down,
-    name: '20261112_153451_split_site_images'
+    name: '20261112_153451_split_site_images',
   },
-  { up: migration_virtual_artifacts.up, down: migration_virtual_artifacts.down, name: '20261112_160000_rename_virtual_artifacts' },
+  {
+    up: migration_20261112_160000_rename_virtual_artifacts.up,
+    down: migration_20261112_160000_rename_virtual_artifacts.down,
+    name: '20261112_160000_rename_virtual_artifacts',
+  },
+  {
+    up: migration_20261112_160254_public_picture_folders.up,
+    down: migration_20261112_160254_public_picture_folders.down,
+    name: '20261112_160254_public_picture_folders'
+  },
 ];

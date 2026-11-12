@@ -27,30 +27,27 @@ export default async function PicturesPage({
   const ancestors: FolderInterface[] = []
   let ancestor = folder
   while (ancestor) {
-    if (ancestor.showInGallery === false) notFound()
     ancestors.unshift(ancestor)
     const parentID = typeof ancestor.folder === 'object' ? ancestor.folder?.id : ancestor.folder
     ancestor = await findFolder(parentID)
   }
 
+  const folderQuery = folderID === null ? '' : `folder=${folderID}&`
   const folderFilter = { folder: folderID === null ? { exists: false } : { equals: folderID } }
   const [folders, pictures] = await Promise.all([
     payload.find({
       collection: 'payload-folders',
-      where: { and: [folderFilter, { showInGallery: { not_equals: false } }] },
+      where: folderFilter,
       sort: 'name',
       pagination: false,
     }),
-    // Root uploads are website assets; only browse pictures inside folders.
-    folderID === null
-      ? Promise.resolve({ docs: [], totalDocs: 0, totalPages: 1, hasPrevPage: false, hasNextPage: false })
-      : payload.find({
-          collection: 'pictures',
-          where: folderFilter,
-          sort: 'filename',
-          limit: 21,
-          page,
-        }),
+    payload.find({
+      collection: 'pictures',
+      where: folderFilter,
+      sort: 'filename',
+      limit: 21,
+      page,
+    }),
   ])
 
   if (page > Math.max(1, pictures.totalPages)) notFound()
@@ -111,11 +108,11 @@ export default async function PicturesPage({
       {pictures.totalPages > 1 && (
         <nav className="picture-pagination" aria-label="Picture pages">
           {pictures.hasPrevPage && (
-            <Link href={`/pictures?folder=${folderID}&page=${page - 1}`}>← Previous</Link>
+            <Link href={`/pictures?${folderQuery}page=${page - 1}`}>← Previous</Link>
           )}
           <span>Page {page} of {pictures.totalPages}</span>
           {pictures.hasNextPage && (
-            <Link href={`/pictures?folder=${folderID}&page=${page + 1}`}>Next →</Link>
+            <Link href={`/pictures?${folderQuery}page=${page + 1}`}>Next →</Link>
           )}
         </nav>
       )}

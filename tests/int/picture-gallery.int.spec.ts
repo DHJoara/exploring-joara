@@ -8,7 +8,8 @@ vi.mock('next/navigation', () => ({ useRouter: () => router }))
 
 vi.mock('next/image', () => ({ default: (): null => null }))
 
-it('changes gallery pages while reopening the viewer at the correct boundary', async () => {
+it.each([7, null])('changes gallery pages and restores the viewer for folder %s', async (folderID) => {
+  const folderQuery = folderID === null ? '' : `folder=${folderID}&`
   const pictures = Array.from({ length: 21 }, (_, index) => ({
     id: index + 1, url: `/photo-${index + 1}.jpg`, alt: '', filename: `Photo ${index + 1}`,
   }))
@@ -30,34 +31,34 @@ it('changes gallery pages while reopening the viewer at the correct boundary', a
 
   try {
     await act(async () => {
-      root.render(createElement(PictureGallery, { pictures, folderID: 7, page: 1, totalPictures: 22 }))
+      root.render(createElement(PictureGallery, { pictures, folderID, page: 1, totalPictures: 22 }))
     })
     await click(container.querySelectorAll('.picture-thumbnail')[20])
     await click(viewerButton('Next'))
-    expect(router.push).toHaveBeenLastCalledWith('/pictures?folder=7&page=2&viewer=first', { scroll: false })
+    expect(router.push).toHaveBeenLastCalledWith(`/pictures?${folderQuery}page=2&viewer=first`, { scroll: false })
 
     // Simulate the new server-rendered page arriving after router navigation.
     await act(async () => {
       root.render(createElement(PictureGallery, {
-        key: 'page-2', pictures: [lastPicture], folderID: 7, page: 2, totalPictures: 22, viewer: 'first',
+        key: 'page-2', pictures: [lastPicture], folderID, page: 2, totalPictures: 22, viewer: 'first',
       }))
     })
     expect(container.querySelector('dialog')?.hasAttribute('open')).toBe(true)
     expect(container.querySelector('dialog')?.textContent).toContain('22 / 22')
     expect(container.querySelectorAll('.picture-thumbnail')).toHaveLength(1)
     await click(viewerButton('Previous'))
-    expect(router.push).toHaveBeenLastCalledWith('/pictures?folder=7&page=1&viewer=last', { scroll: false })
+    expect(router.push).toHaveBeenLastCalledWith(`/pictures?${folderQuery}page=1&viewer=last`, { scroll: false })
 
     await act(async () => {
       root.render(createElement(PictureGallery, {
-        key: 'page-1', pictures, folderID: 7, page: 1, totalPictures: 22, viewer: 'last',
+        key: 'page-1', pictures, folderID, page: 1, totalPictures: 22, viewer: 'last',
       }))
     })
     expect(container.querySelector('dialog')?.textContent).toContain('21 / 22')
     await act(async () => {
       container.querySelector('dialog')!.dispatchEvent(new Event('close'))
     })
-    expect(router.replace).toHaveBeenLastCalledWith('/pictures?folder=7&page=1', { scroll: false })
+    expect(router.replace).toHaveBeenLastCalledWith(`/pictures?${folderQuery}page=1`, { scroll: false })
   } finally {
     await act(async () => root.unmount())
     container.remove()

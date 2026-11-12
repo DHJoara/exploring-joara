@@ -201,7 +201,6 @@ export interface FolderInterface {
     totalDocs?: number;
   };
   folderType?: 'pictures'[] | null;
-  showInGallery?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -429,7 +428,6 @@ export interface PayloadFoldersSelect<T extends boolean = true> {
   folder?: T;
   documentsAndFolders?: T;
   folderType?: T;
-  showInGallery?: T;
   updatedAt?: T;
   createdAt?: T;
 }

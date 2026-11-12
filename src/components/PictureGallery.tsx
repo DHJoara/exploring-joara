@@ -14,6 +14,7 @@ export function PictureGallery({ pictures, folderID, page, totalPictures, viewer
   viewer?: string
 }) {
   const router = useRouter()
+  const folderQuery = folderID === null ? '' : `folder=${folderID}&`
   const [loading, startTransition] = useTransition()
   const [selected, setSelected] = useState<number | null>(
     viewer === 'first' ? 0 : viewer === 'last' ? pictures.length - 1 : null,
@@ -41,7 +42,7 @@ export function PictureGallery({ pictures, folderID, page, totalPictures, viewer
     }
     startTransition(() => {
       router.push(
-        `/pictures?folder=${folderID}&page=${nextPage}&viewer=${direction > 0 ? 'first' : 'last'}`,
+        `/pictures?${folderQuery}page=${nextPage}&viewer=${direction > 0 ? 'first' : 'last'}`,
         { scroll: false },
       )
     })
@@ -73,7 +74,7 @@ export function PictureGallery({ pictures, folderID, page, totalPictures, viewer
         aria-label="Picture viewer"
         onClose={() => {
           setSelected(null)
-          if (viewer) router.replace(`/pictures?folder=${folderID}&page=${page}`, { scroll: false })
+          if (viewer) router.replace(`/pictures?${folderQuery}page=${page}`, { scroll: false })
         }}
         onKeyDown={(event) => {
           if (event.key === 'ArrowLeft') {
