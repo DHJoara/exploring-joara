@@ -1,14 +1,10 @@
-# Payload Cloudflare Template
+# Exploring Joara
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/payloadcms/payload/tree/3.x/templates/with-cloudflare-d1)
-
-**This can only be deployed on Paid Workers right now due to size limits.** This template comes configured with the bare minimum to get started on anything you need.
+Based on the Payload Blank Template, with the reviewed Joara exhibit pages, collections, and globals.
 
 ## Quick start
 
-This template can be deployed directly to Cloudflare Workers by clicking the button to take you to the setup screen.
-
-From there you can connect your code to a git provider such Github or Gitlab, name your Workers, D1 Database and R2 Bucket as well as attach any additional environment variables or services you need.
+This application uses the template’s SQLite adapter and the official S3 storage adapter. It can run on any host that supports Next.js and persistent SQLite storage.
 
 ## Quick Start - local setup
 
@@ -16,15 +12,21 @@ To spin up this template locally, follow these steps:
 
 ### Clone
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. Cloudflare will connect your app to a git provider such as Github and you can access your code from there.
+After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
 
-### Local Development
+### Development
+
+1. First [clone the repo](#clone) if you have not done so already
+2. `cd my-project && cp .env.example .env` to copy the example environment variables. Set a random PAYLOAD_SECRET and a DATABASE_URL pointing to a SQLite file. The example uses file:./exploring-joara.db. Leave S3 variables empty for local uploads, or configure your S3-compatible bucket credentials.
+
+3. `pnpm install && pnpm dev` to install dependencies and start the dev server
+4. open `http://localhost:3000` to open the app in your browser
+
+That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, when you're ready to go live.
 
 ## How it works
 
-Out of the box, using [`Wrangler`](https://developers.cloudflare.com/workers/wrangler/) will automatically create local bindings for you to connect to the remote services and it can even create a local mock of the services you're using with Cloudflare.
-
-We've pre-configured Payload for you with the following:
+The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
 
 ### Collections
 
@@ -36,110 +38,38 @@ See the [Collections](https://payloadcms.com/docs/configuration/collections) doc
 
   For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
 
-- #### Media
+- #### Pictures, Site Images, and Virtual Artifacts
 
-  This is the uploads enabled collection.
+  These replace the example Media collection with the reviewed archive upload workflows. Staff can upload and organize pictures, create model thumbnails, and edit site content. Public pages use normal Payload reads with access control enforced.
 
-### Image Storage (R2)
+## Production
 
-Images will be served from an R2 bucket which you can then further configure to use a CDN to serve for your frontend directly.
+Configure PAYLOAD_SECRET, a DATABASE_URL on persistent disk, and the S3 variables in .env.example. Keep the bucket private. The official S3 adapter handles staff uploads and signed model downloads. Configure bucket CORS to allow your app’s origin, GET/HEAD/PUT, upload headers (Content-Type, If-None-Match, x-amz-*), and expose ETag.
 
-### D1 Database
-
-The Worker will have direct access to a D1 SQLite database which Wrangler can connect locally to, just note that you won't have a connection string as you would typically with other providers.
-
-You can enable read replicas by adding `readReplicas: 'first-primary'` in the DB adapter and then enabling it on your D1 Cloudflare dashboard. Read more about this feature on [our docs](https://payloadcms.com/docs/database/sqlite#d1-read-replicas).
-
-## Working with Cloudflare
-
-Firstly, after installing dependencies locally you need to authenticate with Wrangler by running:
-
-```bash
-pnpm wrangler login
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+# Run with production configuration after persistent storage is mounted:
+pnpm payload migrate
+pnpm start
 ```
 
-This will take you to Cloudflare to login and then you can use the Wrangler CLI locally for anything, use `pnpm wrangler help` to see all available options.
+Use a single application instance for the SQLite file. Configure database-aware backups before storing production content. Builds do not read the production database; the public layout uses Next.js’s standard force-dynamic setting. No provider-specific deployment files, custom content-cache helpers, or profiling utilities are required.
 
-Wrangler is pretty smart so it will automatically bind your services for local development just by running `pnpm dev`.
+The code migration does not transfer existing production content. Transfer and validate database records, relationships, users, and media object keys separately before switching traffic. Preserve the existing Payload secret when migrating users. Do not overwrite the preserved starter database without a backup.
 
-## Deployments
+## Checks
 
-When you're ready to deploy, first make sure you have created your migrations:
-
-```bash
+```sh
+pnpm generate:types
+pnpm generate:importmap
 pnpm payload migrate:create
+pnpm lint
+pnpm test:int
 ```
 
-Then run the following command:
-
-```bash
-pnpm run deploy
-```
-
-This will spin up Wrangler in `production` mode, run any created migrations, build the app and then deploy the bundle up to Cloudflare.
-
-That's it! You can if you wish move these steps into your CI pipeline as well.
-
-## Enabling logs
-
-By default logs are not enabled for your API, we've made this decision because it does run against your quota so we've left it opt-in. But you can easily enable logs in one click in the Cloudflare panel, [see docs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs).
-
-### Logger Configuration
-
-This template includes a custom console-based logger compatible with Cloudflare Workers. Payload's default logger uses `pino-pretty`, which relies on Node.js APIs not available in Workers and would cause `fs.write is not implemented` errors.
-
-The custom logger in `payload.config.ts`:
-
-- Routes logs through `console.*` methods which Workers handles correctly
-- Outputs JSON-formatted logs for Cloudflare observability
-- Only active in production (development uses the default `pino-pretty` for better DX)
-
-You can control the log level via the `PAYLOAD_LOG_LEVEL` environment variable (e.g., `debug`, `info`, `warn`, `error`).
-
-### Diagnostic Channel Errors
-
-If you see "Failed to publish diagnostic channel message" errors in your observability logs, these typically come from the `undici` HTTP client library. The template includes `skipSafeFetch: true` in the Media collection to use native fetch instead of undici for file uploads, which helps reduce these errors.
-
-Cloudflare Workers runs in an [isolated environment that cannot access private IP ranges](https://developers.cloudflare.com/workers-vpc/examples/route-across-private-services/) by default, providing built-in SSRF protection. This makes `skipSafeFetch` safe to use.
-
-## Known issues
-
-### Image resizing
-
-Workers do not support `sharp`, so image resizing features are not available. The Media collection has `crop` and `focalPoint` disabled for this reason, and options like `imageSizes` will not work.
-
-### GraphQL
-
-We are currently waiting on some issues with GraphQL to be [fixed upstream in Workers](https://github.com/cloudflare/workerd/issues/5175) so full support for GraphQL is not currently guaranteed when deployed.
-
-### Worker size limits
-
-We currently recommend deploying this template to the Paid Workers plan due to bundle [size limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size) of 3mb. We're actively trying to reduce our bundle footprint over time to better meet this metric.
-
-This also applies to your own code, in the case of importing a lot of libraries you may find yourself limited by the bundle.
+Run tests only against a separate local database and upload files; the tests create and delete fixtures. Never use production database or bucket credentials for tests.
 
 ## Questions
 
 If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
-
-### Public content caching
-
-Public Payload reads use Next.js `unstable_cache` and share one cache tag: `public-content`. Payload
-saves and deletions mark it stale; the next visit refreshes content in the
-background. A 24-hour revalidation interval provides a fallback if tag invalidation
-is missed; the next visit after that interval triggers a background refresh.
-Gallery folder and page queries have separate cache keys.
-
-OpenNext stores cached content in R2 and tag timestamps in the existing D1
-database using the `NEXT_TAG_CACHE_D1` binding. Its deploy/preview command creates
-the tag table. A Durable Object queue coordinates page regeneration using OpenNext defaults.
-The queue does not set a cache lifetime; refreshes use both tags and the 24-hour fallback.
-Admin, authentication, and uploads do not use the public read cache.
-
-Optimized thumbnails (`/_next/image`) use Workers Cache for one hour via
-`worker.ts`. HTML and page-navigation responses are excluded from this outer cache using
-`Cloudflare-CDN-Cache-Control`, preserving their existing `Cache-Control` headers.
-Static asset policies are left unchanged. After
-deployment, repeated image requests should show `CF-Cache-Status: HIT`; a replaced
-image at the same URL may remain fresh in cache for one hour, then an older copy
-can be served for up to another day while revalidation runs.

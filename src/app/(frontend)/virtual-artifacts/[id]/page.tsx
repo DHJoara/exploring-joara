@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { cachedPayload } from '@/utilities/cachedPayload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import { VirtualArtifactModel } from '@/components/VirtualArtifactModel'
 import '../styles.css'
 
@@ -8,8 +9,9 @@ export default async function VirtualArtifactPage({ params }: { params: Promise<
   const { id } = await params
   const artifactID = Number(id)
   if (!Number.isSafeInteger(artifactID) || artifactID < 1) notFound()
-  const payload = cachedPayload
+  const payload = await getPayload({ config })
   const artifact = await payload.findByID({
+    overrideAccess: false,
     collection: 'virtual_artifacts',
     id: artifactID,
     disableErrors: true,

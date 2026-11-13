@@ -1,10 +1,11 @@
-import { cachedPayload } from '@/utilities/cachedPayload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import { SectionBlurb } from '@/components/SectionBlurb'
 import Link from 'next/link'
 
 export default async function VirtualMuseumPage() {
-  const payload = cachedPayload
-  const content = await payload.findGlobal({ slug: 'virtual_museum' })
+  const payload = await getPayload({ config })
+  const content = await payload.findGlobal({ overrideAccess: false, slug: 'virtual_museum' })
   return (
     <>
       <h1>Virtual Museum</h1>

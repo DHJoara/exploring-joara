@@ -172,6 +172,7 @@ export interface User {
 export interface Picture {
   id: number;
   alt?: string | null;
+  prefix?: string | null;
   _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
@@ -219,6 +220,7 @@ export interface VirtualArtifact {
   name: string;
   description?: string | null;
   thumbnail: number | SiteImage;
+  prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -241,6 +243,7 @@ export interface VirtualArtifact {
 export interface SiteImage {
   id: number;
   alt?: string | null;
+  prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -367,6 +370,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface PicturesSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   _objectKey?: T;
   folder?: T;
   updatedAt?: T;
@@ -387,6 +391,7 @@ export interface VirtualArtifactsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   thumbnail?: T;
+  prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -406,6 +411,7 @@ export interface VirtualArtifactsSelect<T extends boolean = true> {
  */
 export interface SiteImagesSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;

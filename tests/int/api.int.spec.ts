@@ -3,9 +3,13 @@ import { getPayload, Payload } from 'payload'
 import config from '@/payload.config'
 import { defaultTimelineURL } from '@/globals/Timeline'
 
-import { describe, it, beforeAll, expect } from 'vitest'
+import { describe, it, beforeAll, afterAll, expect } from 'vitest'
 
 let payload: Payload
+
+afterAll(async () => {
+  await payload?.destroy()
+})
 
 describe('API', () => {
   beforeAll(async () => {
@@ -184,18 +188,16 @@ describe('Pictures and native folders', () => {
           }),
         ).toBeNull()
       }
-      const proxy = await (
-        await import('wrangler')
-      ).getPlatformProxy<CloudflareEnv>({ remoteBindings: false })
+      const { existsSync } = await import('node:fs')
+      const path = await import('node:path')
       for (const picture of originals) {
         expect(
           await payload.findByID({ collection: 'pictures', id: picture.id, disableErrors: true }),
         ).toBeNull()
-        expect(await proxy.env.R2.head(picture._objectKey || picture.filename!)).toBeNull()
+        expect(existsSync(path.resolve('pictures', picture.filename!))).toBe(false)
       }
       expect((await payload.findByID({ collection: 'pictures', id: copy.id })).id).toBe(copy.id)
-      expect(await proxy.env.R2.head(copy._objectKey || copy.filename!)).not.toBeNull()
-      await proxy.dispose()
+      expect(existsSync(path.resolve('pictures', copy.filename!))).toBe(true)
     } finally {
       await payload.delete({
         collection: 'payload-folders',

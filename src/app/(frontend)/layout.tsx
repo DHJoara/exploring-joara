@@ -5,6 +5,8 @@ import { SiteNavigation } from '@/components/SiteNavigation'
 import { siteSections, siteName, siteLocation } from '@/globals/Home'
 import './styles.css'
 
+export const dynamic = 'force-dynamic'
+
 const libreCaslon = Libre_Caslon_Text({
   subsets: ['latin'],
   weight: ['400', '700'],

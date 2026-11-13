@@ -24,14 +24,7 @@ const eslintConfig = [
     },
   },
   {
-    ignores: [
-      '.next/**',
-      '.open-next/**',
-      '.wrangler/**',
-      'cloudflare-env.d.ts',
-      'src/payload-types.ts',
-      'src/payload-generated-schema.ts',
-    ],
+    ignores: ['.next/', 'src/payload-types.ts', 'src/payload-generated-schema.ts'],
   },
 ]
 
