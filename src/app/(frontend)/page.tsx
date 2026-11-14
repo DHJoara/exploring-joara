@@ -1,8 +1,11 @@
+import { connection } from 'next/server'
 import Image from 'next/image'
 import * as cachedPayload from '@/utilities/cachedPayload'
 import { siteSections, siteName } from '@/globals/Home'
 
 export default async function HomePage() {
+  // The persistent SQLite volume is available at runtime, not during the build.
+  await connection()
   const homeContent = await cachedPayload.findGlobal({ slug: 'home' })
   const homeCards = siteSections.map((section) => {
     const content = homeContent[section.key]
