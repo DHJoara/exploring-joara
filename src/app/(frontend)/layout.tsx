@@ -5,6 +5,9 @@ import { SiteNavigation } from '@/components/SiteNavigation'
 import { siteSections, siteName, siteLocation } from '@/globals/Home'
 import './styles.css'
 
+// Keep the current page visible while the next page waits for its content.
+export const instant = false
+
 const libreCaslon = Libre_Caslon_Text({
   subsets: ['latin'],
   weight: ['400', '700'],
