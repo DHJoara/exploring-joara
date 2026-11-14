@@ -6,6 +6,8 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { revalidatePublicContent } from './hooks/revalidatePublicContent'
+
 import { Users } from './collections/Users'
 import { Pictures } from './collections/Pictures'
 import { VirtualArtifacts } from './collections/VirtualArtifacts'
@@ -28,9 +30,25 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Pictures, VirtualArtifacts, SiteImages],
+  collections: [
+    Users,
+    ...[Pictures, VirtualArtifacts, SiteImages].map((collection) => ({
+      ...collection,
+      hooks: {
+        ...collection.hooks,
+        afterChange: [...(collection.hooks?.afterChange ?? []), revalidatePublicContent],
+        afterDelete: [...(collection.hooks?.afterDelete ?? []), revalidatePublicContent],
+      },
+    })),
+  ],
   folders: pictureFolders,
-  globals: [Home, PicturesPage, VirtualArtifactsPage, Timeline, VirtualMuseum],
+  globals: [Home, PicturesPage, VirtualArtifactsPage, Timeline, VirtualMuseum].map((global) => ({
+    ...global,
+    hooks: {
+      ...global.hooks,
+      afterChange: [...(global.hooks?.afterChange ?? []), revalidatePublicContent],
+    },
+  })),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

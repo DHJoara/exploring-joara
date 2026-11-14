@@ -1,8 +1,7 @@
 import { SectionBlurb } from '@/components/SectionBlurb'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import * as cachedPayload from '@/utilities/cachedPayload'
 import { PictureGallery } from '@/components/PictureGallery'
 import type { FolderInterface } from '@/payload-types'
 import './styles.css'
@@ -17,17 +16,11 @@ export default async function PicturesPage({
   if (!Number.isSafeInteger(page) || page < 1) notFound()
   const folderID = folderParam === undefined ? null : Number(folderParam)
   if (folderID !== null && (!Number.isSafeInteger(folderID) || folderID < 1)) notFound()
-  const payload = await getPayload({ config })
-  const section = await payload.findGlobal({ overrideAccess: false, slug: 'pictures_page' })
+  const section = await cachedPayload.findGlobal({ slug: 'pictures_page' })
   const findFolder = (id: number | null | undefined) =>
     id == null
       ? null
-      : payload.findByID({
-          overrideAccess: false,
-          collection: 'payload-folders',
-          id,
-          disableErrors: true,
-        })
+      : cachedPayload.findByID({ collection: 'payload-folders', id, disableErrors: true })
   const folder = await findFolder(folderID)
   if (folderID !== null && !folder) notFound()
 
@@ -40,23 +33,10 @@ export default async function PicturesPage({
   }
 
   const folderQuery = folderID === null ? '' : `folder=${folderID}&`
-  const folderFilter = { folder: folderID === null ? { exists: false } : { equals: folderID } }
+  const where = { folder: folderID === null ? { exists: false } : { equals: folderID } }
   const [folders, pictures] = await Promise.all([
-    payload.find({
-      overrideAccess: false,
-      collection: 'payload-folders',
-      where: folderFilter,
-      sort: 'name',
-      pagination: false,
-    }),
-    payload.find({
-      overrideAccess: false,
-      collection: 'pictures',
-      where: folderFilter,
-      sort: 'filename',
-      limit: 21,
-      page,
-    }),
+    cachedPayload.find({ collection: 'payload-folders', where, sort: 'name', pagination: false }),
+    cachedPayload.find({ collection: 'pictures', where, sort: 'filename', limit: 21, page }),
   ])
 
   if (page > Math.max(1, pictures.totalPages)) notFound()

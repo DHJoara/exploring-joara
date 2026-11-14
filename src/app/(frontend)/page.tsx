@@ -1,11 +1,9 @@
 import Image from 'next/image'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import * as cachedPayload from '@/utilities/cachedPayload'
 import { siteSections, siteName } from '@/globals/Home'
 
 export default async function HomePage() {
-  const payload = await getPayload({ config })
-  const homeContent = await payload.findGlobal({ overrideAccess: false, slug: 'home' })
+  const homeContent = await cachedPayload.findGlobal({ slug: 'home' })
   const homeCards = siteSections.map((section) => {
     const content = homeContent[section.key]
     const image = typeof content?.image === 'object' ? content.image : null

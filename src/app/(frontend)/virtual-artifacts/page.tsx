@@ -2,8 +2,7 @@ import { SectionBlurb } from '@/components/SectionBlurb'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import * as cachedPayload from '@/utilities/cachedPayload'
 import './styles.css'
 
 export default async function VirtualArtifactsPage({
@@ -15,18 +14,10 @@ export default async function VirtualArtifactsPage({
   const page = pageParam === undefined ? 1 : Number(pageParam)
   if (!Number.isSafeInteger(page) || page < 1) notFound()
 
-  const payload = await getPayload({ config })
-  const section = await payload.findGlobal({
-    overrideAccess: false,
-    slug: 'virtual_artifacts_page',
-  })
-  const artifacts = await payload.find({
-    overrideAccess: false,
-    collection: 'virtual_artifacts',
-    sort: 'name',
-    limit: 21,
-    page,
-  })
+  const [section, artifacts] = await Promise.all([
+    cachedPayload.findGlobal({ slug: 'virtual_artifacts_page' }),
+    cachedPayload.find({ collection: 'virtual_artifacts', sort: 'name', limit: 21, page }),
+  ])
 
   if (page > Math.max(1, artifacts.totalPages)) notFound()
 

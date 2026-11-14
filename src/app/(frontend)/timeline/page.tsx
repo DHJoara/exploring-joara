@@ -1,11 +1,9 @@
 import { SectionBlurb } from '@/components/SectionBlurb'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import * as cachedPayload from '@/utilities/cachedPayload'
 import './styles.css'
 
 export default async function TimelinePage() {
-  const payload = await getPayload({ config })
-  const timeline = await payload.findGlobal({ overrideAccess: false, slug: 'timeline' })
+  const timeline = await cachedPayload.findGlobal({ slug: 'timeline' })
 
   return (
     <>

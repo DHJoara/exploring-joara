@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { Libre_Caslon_Text, Montserrat } from 'next/font/google'
 import { SiteNavigation } from '@/components/SiteNavigation'
 import { siteSections, siteName, siteLocation } from '@/globals/Home'
 import './styles.css'
-
-export const dynamic = 'force-dynamic'
 
 const libreCaslon = Libre_Caslon_Text({
   subsets: ['latin'],
@@ -43,7 +41,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link className="wordmark" href="/">
                 {siteName}
               </Link>
-              <SiteNavigation navigation={navigation} />
+              <Suspense
+                fallback={
+                  <nav aria-label="Main navigation">
+                    {navigation.map(([label, href]) => (
+                      <Link href={href} key={href}>
+                        {label}
+                      </Link>
+                    ))}
+                  </nav>
+                }
+              >
+                <SiteNavigation navigation={navigation} />
+              </Suspense>
             </aside>
             <main>{children}</main>
           </div>

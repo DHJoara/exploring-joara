@@ -7,6 +7,9 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  // Payload auth does not yet support speculative partial prefetches.
+  partialPrefetching: false,
   images: {
     localPatterns: [
       { pathname: '/images/**' },

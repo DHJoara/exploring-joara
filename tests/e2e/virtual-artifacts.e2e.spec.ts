@@ -38,10 +38,8 @@ test.afterAll(async () => {
 
 test('loads a GLB and supports rotation and zoom on desktop and mobile', async ({ page }) => {
   await page.goto('http://localhost:3000/virtual-artifacts')
-  await expect(
-    page.getByRole('link', { name: new RegExp(`^Virtual artifact photo ${artifactName}$`) }),
-  ).toBeVisible()
-  await page.getByRole('link', { name: new RegExp(`^Virtual artifact photo ${artifactName}$`) }).click()
+  await expect(page.getByRole('link', { name: artifactName })).toBeVisible()
+  await page.getByRole('link', { name: artifactName }).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(artifactName)
   const viewer = page.locator('model-viewer')
   await expect(viewer).toHaveAttribute('camera-controls', '')
